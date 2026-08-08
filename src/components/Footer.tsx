@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Logo } from './Logo';
-import { TopSource } from '../types';
+import { TopSource, PageTemplateType } from '../types';
 import { submitNewsletterSignup } from '../services/api';
 import { ArrowRight, CheckCircle2, AlertCircle, ShieldAlert } from 'lucide-react';
 
@@ -8,12 +8,14 @@ interface FooterProps {
   topSources: TopSource[];
   onSelectCategory: (category: string) => void;
   onSourceSelect?: (sourceName: string) => void;
+  onNavigatePage?: (template: PageTemplateType, label: string) => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({
   topSources,
   onSelectCategory,
   onSourceSelect,
+  onNavigatePage,
 }) => {
   const [email, setEmail] = useState('');
   const [statusState, setStatusState] = useState<'idle' | 'submitting' | 'subscribed' | 'already_subscribed' | 'error'>('idle');
@@ -43,6 +45,12 @@ export const Footer: React.FC<FooterProps> = ({
     }
   };
 
+  const handleLinkClick = (template: PageTemplateType, label: string) => {
+    if (onNavigatePage) {
+      onNavigatePage(template, label);
+    }
+  };
+
   return (
     <footer className="bg-[#0A0F1A] text-slate-300 pt-14 pb-8 border-t border-[#1A2234]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -52,10 +60,10 @@ export const Footer: React.FC<FooterProps> = ({
           <div className="lg:col-span-2 space-y-4">
             <Logo size="lg" lightText={true} />
             <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
-              MarketMaven is a global financial markets and emerging economies news publication. We curate high-relevance insights, sovereign liquidity data, and central bank coverage across Africa, Asia, and frontier capital markets.
+              MarketMaven is a financial intelligence platform covering Nigerian and global capital markets. We bring together market data, aggregated news, and original analysis in one place.
             </p>
 
-            {/* Newsletter 3rd instance in footer */}
+            {/* Newsletter in footer */}
             <div className="pt-2">
               <span className="text-xs font-semibold text-white block mb-2">
                 Subscribe to MarketMaven Morning Wire
@@ -91,46 +99,105 @@ export const Footer: React.FC<FooterProps> = ({
             </div>
           </div>
 
-          {/* Col 2: Coverage Sections */}
+          {/* Col 2: Platform Links */}
           <div className="space-y-3">
             <h4 className="text-xs font-bold uppercase tracking-wider text-white">
-              Coverage
+              Platform
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <button onClick={() => onSelectCategory('All')} className="hover:text-white transition-colors">
-                  Home & Wire
+                <button 
+                  onClick={() => handleLinkClick('about', 'About MarketMaven')} 
+                  className="hover:text-[#22C55E] transition-colors text-left cursor-pointer"
+                >
+                  About MarketMaven
                 </button>
               </li>
               <li>
-                <button onClick={() => onSelectCategory('Emerging Markets')} className="hover:text-white transition-colors">
-                  Emerging Markets
+                <button 
+                  onClick={() => handleLinkClick('reports', 'Featured Reports')} 
+                  className="hover:text-[#22C55E] transition-colors text-left cursor-pointer"
+                >
+                  Featured Reports
                 </button>
               </li>
               <li>
-                <button onClick={() => onSelectCategory('Markets')} className="hover:text-white transition-colors">
-                  Global Capital Markets
+                <button 
+                  onClick={() => onSelectCategory('All')} 
+                  className="hover:text-[#22C55E] transition-colors text-left cursor-pointer"
+                >
+                  Market News
                 </button>
               </li>
               <li>
-                <button onClick={() => onSelectCategory('FX & Currencies')} className="hover:text-white transition-colors">
-                  FX & Central Banks
+                <button 
+                  onClick={() => handleLinkClick('screener', 'Equity Screener')} 
+                  className="hover:text-[#22C55E] transition-colors text-left cursor-pointer"
+                >
+                  Research Tools
                 </button>
               </li>
               <li>
-                <button onClick={() => onSelectCategory('Macroeconomics')} className="hover:text-white transition-colors">
-                  Macroeconomics
+                <button 
+                  onClick={() => handleLinkClick('education', 'Education & Academy')} 
+                  className="hover:text-[#22C55E] transition-colors text-left cursor-pointer"
+                >
+                  Education
                 </button>
               </li>
               <li>
-                <button onClick={() => onSelectCategory('Tech & Innovation')} className="hover:text-white transition-colors">
-                  Fintech & Digital Rails
+                <button 
+                  onClick={() => handleLinkClick('contact', 'Contact MarketMaven')} 
+                  className="hover:text-[#22C55E] transition-colors text-left cursor-pointer"
+                >
+                  Contact
                 </button>
               </li>
             </ul>
           </div>
 
-          {/* Col 3: Top Sources */}
+          {/* Col 3: Legal Links */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-white">
+              Legal
+            </h4>
+            <ul className="space-y-2 text-xs">
+              <li>
+                <button 
+                  onClick={() => handleLinkClick('terms', 'Terms of Service')} 
+                  className="hover:text-[#22C55E] transition-colors text-left cursor-pointer"
+                >
+                  Terms of Service
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => handleLinkClick('privacy', 'Privacy Policy')} 
+                  className="hover:text-[#22C55E] transition-colors text-left cursor-pointer"
+                >
+                  Privacy Policy
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => handleLinkClick('disclaimer', 'Market Disclaimer')} 
+                  className="hover:text-[#22C55E] transition-colors text-left cursor-pointer"
+                >
+                  Disclaimer
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => handleLinkClick('cookies', 'Cookies & Local Storage')} 
+                  className="hover:text-[#22C55E] transition-colors text-left cursor-pointer"
+                >
+                  Cookies & Local Storage
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          {/* Col 4: Top Sources */}
           <div className="space-y-3">
             <h4 className="text-xs font-bold uppercase tracking-wider text-white">
               Top Sources
@@ -140,7 +207,7 @@ export const Footer: React.FC<FooterProps> = ({
                 <li key={src.id}>
                   <button
                     onClick={() => onSourceSelect && onSourceSelect(src.name)}
-                    className="hover:text-white transition-colors flex items-center justify-between w-full text-left"
+                    className="hover:text-white transition-colors flex items-center justify-between w-full text-left cursor-pointer"
                   >
                     <span>{src.name}</span>
                     <span className="text-[10px] text-slate-500 font-num">{src.articleCount}</span>
@@ -150,27 +217,13 @@ export const Footer: React.FC<FooterProps> = ({
             </ul>
           </div>
 
-          {/* Col 4: Legal & Disclaimer */}
-          <div className="space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-white">
-              Platform & Legal
-            </h4>
-            <ul className="space-y-2 text-xs">
-              <li><a href="#about" onClick={(e) => e.preventDefault()} className="hover:text-white transition-colors">About MarketMaven</a></li>
-              <li><a href="#editorial" onClick={(e) => e.preventDefault()} className="hover:text-white transition-colors">Editorial Guidelines</a></li>
-              <li><a href="#privacy" onClick={(e) => e.preventDefault()} className="hover:text-white transition-colors">Privacy Policy</a></li>
-              <li><a href="#terms" onClick={(e) => e.preventDefault()} className="hover:text-white transition-colors">Terms of Service</a></li>
-              <li><a href="#rss" onClick={(e) => e.preventDefault()} className="hover:text-white transition-colors">RSS Wire Feeds</a></li>
-            </ul>
-          </div>
-
         </div>
 
         {/* Disclaimer & Copyright */}
         <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <p className="flex items-center gap-1">
             <ShieldAlert className="w-3.5 h-3.5 shrink-0 text-slate-400" />
-            Financial Market Disclaimer: MarketMaven news content is provided for informational and editorial purposes only and does not constitute investment advice.
+            MarketMaven is an information platform, not a broker or investment adviser. See <button onClick={() => handleLinkClick('disclaimer', 'Disclaimer')} className="text-slate-400 underline hover:text-white cursor-pointer">Disclaimer</button>.
           </p>
           <p className="font-num shrink-0">
             © {new Date().getFullYear()} MarketMaven Analytics Inc. All rights reserved.
@@ -180,3 +233,4 @@ export const Footer: React.FC<FooterProps> = ({
     </footer>
   );
 };
+

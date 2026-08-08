@@ -32,6 +32,8 @@ import { AuthPagesView } from './components/AuthPagesView';
 import { ReportsListView } from './components/ReportsListView';
 import { ReportDetailView } from './components/ReportDetailView';
 import { AdminReportsView } from './components/AdminReportsView';
+import { InfoPagesView } from './components/InfoPagesView';
+import { ArticleDetailView } from './components/ArticleDetailView';
 
 // Modals
 import { ArticleModal } from './components/ArticleModal';
@@ -274,6 +276,16 @@ export default function App() {
     });
   };
 
+  const handleOpenArticle = (art: Article) => {
+    setSelectedArticle(art);
+    handleNavigate({
+      id: `article-${art.id}`,
+      label: art.title,
+      path: `/article/${art.id}`,
+      template: 'article_detail',
+    });
+  };
+
   // Filtered articles for home view
   const filteredArticles = articles.filter((art) => {
     if (activeSourceFilter && art.source.toLowerCase() !== activeSourceFilter.toLowerCase()) {
@@ -350,21 +362,21 @@ export default function App() {
               leadStory={leadHeroStory}
               recentHeadlines={recentHeadlines}
               featuredSecondary={heroSecondary}
-              onArticleClick={(art) => setSelectedArticle(art)}
+              onArticleClick={handleOpenArticle}
             />
             <SpotlightSection
               mainStory={spotlightMain}
               subStories={spotlightSub}
-              onArticleClick={(art) => setSelectedArticle(art)}
+              onArticleClick={handleOpenArticle}
             />
             <MostRelevantSection
               articles={mostRelevantPool}
-              onArticleClick={(art) => setSelectedArticle(art)}
+              onArticleClick={handleOpenArticle}
             />
             <EditorsPicksSection
               mostRelevantRanking={sidebarMostRelevantRanking}
               topSources={topSources}
-              onArticleClick={(art) => setSelectedArticle(art)}
+              onArticleClick={handleOpenArticle}
               onReportClick={(slug) => {
                 setSelectedReportSlug(slug);
                 handleNavigate({
@@ -378,7 +390,7 @@ export default function App() {
             />
             <MoreTopStoriesSection
               articles={moreTopStories}
-              onArticleClick={(art) => setSelectedArticle(art)}
+              onArticleClick={handleOpenArticle}
             />
             <NewsletterCtaBand />
           </>
@@ -441,7 +453,7 @@ export default function App() {
             currentUser={currentUser}
             savedArticleIds={savedArticleIds}
             onToggleSaveArticle={handleToggleSaveArticle}
-            onArticleClick={(art) => setSelectedArticle(art)}
+            onArticleClick={handleOpenArticle}
             onOpenAuthPrompt={() => handleOpenAuthPrompt('login', 'Sign in to save stories')}
           />
         );
@@ -484,7 +496,7 @@ export default function App() {
             savedArticleIds={savedArticleIds}
             articles={articles}
             onToggleSaveArticle={handleToggleSaveArticle}
-            onArticleClick={(art) => setSelectedArticle(art)}
+            onArticleClick={handleOpenArticle}
             onOpenAuthPrompt={() => handleOpenAuthPrompt('login', 'Sign in to view saved reading list')}
           />
         );
@@ -575,6 +587,58 @@ export default function App() {
           />
         );
 
+      case 'about':
+      case 'terms':
+      case 'privacy':
+      case 'disclaimer':
+      case 'cookies':
+      case 'contact':
+        return (
+          <InfoPagesView
+            page={currentNavItem.template}
+            onNavigate={(template, label) =>
+              handleNavigate({
+                id: template,
+                label,
+                path: `/${template}`,
+                template,
+              })
+            }
+          />
+        );
+
+      case 'article_detail':
+      case 'article-detail':
+        const currentArticle = selectedArticle || articles[0];
+        return (
+          <ArticleDetailView
+            article={currentArticle}
+            currentUser={currentUser}
+            savedArticleIds={savedArticleIds}
+            allArticles={articles}
+            onBack={() => {
+              handleNavigate({
+                id: 'home',
+                label: 'Home',
+                path: '/',
+                template: 'home',
+              });
+            }}
+            onSelectArticle={handleOpenArticle}
+            onSelectTag={(tag) => {
+              setActiveTagFilter(tag);
+              handleNavigate({
+                id: 'home',
+                label: 'Home',
+                path: '/',
+                template: 'home',
+              });
+            }}
+            onToggleSaveArticle={handleToggleSaveArticle}
+            onOpenAuthPrompt={() => handleOpenAuthPrompt('login', 'Sign in to save stories')}
+          />
+        );
+
       default:
         return (
           <TemplateAPage
@@ -583,7 +647,7 @@ export default function App() {
             currentUser={currentUser}
             savedArticleIds={savedArticleIds}
             onToggleSaveArticle={handleToggleSaveArticle}
-            onArticleClick={(art) => setSelectedArticle(art)}
+            onArticleClick={handleOpenArticle}
             onOpenAuthPrompt={() => handleOpenAuthPrompt('login')}
           />
         );
@@ -716,32 +780,24 @@ export default function App() {
             template: 'home',
           });
         }}
-      />
-
-      {/* Modals & Overlays */}
-      <ArticleModal
-        article={selectedArticle}
-        currentUser={currentUser}
-        savedArticleIds={savedArticleIds}
-        onClose={() => setSelectedArticle(null)}
-        onSelectTag={(tag) => {
-          setActiveTagFilter(tag);
+        onNavigatePage={(template, label) =>
           handleNavigate({
-            id: 'home',
-            label: 'Home',
-            path: '/',
-            template: 'home',
-          });
-        }}
-        onToggleSaveArticle={handleToggleSaveArticle}
-        onOpenAuthPrompt={() => handleOpenAuthPrompt('login', 'Sign in to save stories')}
+            id: template,
+            label,
+            path: `/${template}`,
+            template,
+          })
+        }
       />
 
       <SearchModal
         isOpen={searchModalOpen}
         onClose={() => setSearchModalOpen(false)}
         articles={articles}
-        onSelectArticle={(art) => setSelectedArticle(art)}
+        onSelectArticle={(art) => {
+          setSearchModalOpen(false);
+          handleOpenArticle(art);
+        }}
       />
 
       <NewsletterModal
