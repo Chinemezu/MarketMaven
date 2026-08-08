@@ -1,0 +1,6 @@
+{
+  "name": "MarketMaven",
+  "description": "Public-facing editorial and financial news publication for global and emerging markets.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,330 @@
+// SECURITY NOTE: JWT token is stored in localStorage under 'marketmaven_token'.
+// In a production security pass, this should be upgraded to httpOnly cookies to mitigate XSS risks.
+
+import { Article, TopSource, StockData, User, ReportItem, EditorsPickItem } from '../types';
+import { INITIAL_ARTICLES, INITIAL_TOP_SOURCES } from '../data/mockArticles';
+import { MOCK_STOCKS } from '../data/mockStocks';
+
+export const TOKEN_STORAGE_KEY = 'marketmaven_token';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+
+// Listener for 401 Unauthorized events
+type UnauthorizedListener = () => void;
+const unauthorizedListeners = new Set<UnauthorizedListener>();
+
+export function onUnauthorized(listener: UnauthorizedListener): () => void {
+  unauthorizedListeners.add(listener);
+  return () => {
+    unauthorizedListeners.delete(listener);
+  };
+}
+
+function handle401() {
+  localStorage.removeItem(TOKEN_STORAGE_KEY);
+  unauthorizedListeners.forEach((fn) => fn());
+}
+
+export function getStoredToken(): string | null {
+  return localStorage.getItem(TOKEN_STORAGE_KEY);
+}
+
+export function setStoredToken(token: string): void {
+  localStorage.setItem(TOKEN_STORAGE_KEY, token);
+}
+
+export function clearStoredToken(): void {
+  localStorage.removeItem(TOKEN_STORAGE_KEY);
+}
+
+async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+  const token = getStoredToken();
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...(options.headers as Record<string, string> || {}),
+  };
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  const url = `${API_BASE_URL}${endpoint}`;
+  let response: Response;
+  try {
+    response = await fetch(url, { ...options, headers });
+  } catch (err) {
+    // If fetch fails due to network/offline, throw informative error
+    throw new Error('Network error or connection refused. Please check your connectivity.');
+  }
+
+  if (response.status === 401) {
+    handle401();
+    const errorData = await response.json().catch(() => ({ message: 'Unauthorized session' }));
+    throw new Error(errorData.message || 'Unauthorized: Token invalid or expired');
+  }
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({ message: `Request failed with status ${response.status}` }));
+    throw new Error(errorData.message || 'An error occurred processing request');
+  }
+
+  return response.json();
+}
+
+/* ==========================================================================
+   MARKETMAVEN API CLIENT SERVICE
+   ========================================================================== */
+
+export interface AuthResponse {
+  access_token: string;
+  user: User;
+}
+
+export interface WatchlistApiItem {
+  issuer_id: string;
+  ticker: string;
+  name: string;
+  exchange: string;
+  price?: number;
+  change?: number;
+  changePercent?: number;
+  sparkline?: number[];
+}
+
+export interface NewsletterSignupResult {
+  success: boolean;
+  already_subscribed?: boolean;
+  status?: string;
+  message: string;
+  email?: string;
+}
+
+export const apiClient = {
+  // 1. AUTH ENDPOINTS
+  auth: {
+    register: async (payload: { email: string; password: string; name?: string }): Promise<AuthResponse> => {
+      const data = await request<AuthResponse>('/auth/register', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+      if (data.access_token) {
+        setStoredToken(data.access_token);
+      }
+      return data;
+    },
+
+    login: async (payload: { email: string; password: string }): Promise<AuthResponse> => {
+      const data = await request<AuthResponse>('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+      if (data.access_token) {
+        setStoredToken(data.access_token);
+      }
+      return data;
+    },
+
+    me: async (): Promise<User> => {
+      return request<User>('/auth/me', { method: 'GET' });
+    },
+
+    verifyEmail: async (token: string): Promise<{ message: string }> => {
+      return request<{ message: string }>(`/auth/verify-email?token=${encodeURIComponent(token)}`, {
+        method: 'POST',
+      });
+    },
+
+    forgotPassword: async (email: string): Promise<{ message: string }> => {
+      return request<{ message: string }>('/auth/forgot-password', {
+        method: 'POST',
+        body: JSON.stringify({ email }),
+      });
+    },
+
+    resetPassword: async (token: string, new_password: string): Promise<{ message: string }> => {
+      return request<{ message: string }>('/auth/reset-password', {
+        method: 'POST',
+        body: JSON.stringify({ token, new_password }),
+      });
+    },
+  },
+
+  // 2. WATCHLIST ENDPOINTS (My Portfolio)
+  watchlist: {
+    get: async (): Promise<WatchlistApiItem[]> => {
+      return request<WatchlistApiItem[]>('/watchlist', { method: 'GET' });
+    },
+
+    add: async (issuer_id: string): Promise<WatchlistApiItem> => {
+      return request<WatchlistApiItem>('/watchlist', {
+        method: 'POST',
+        body: JSON.stringify({ issuer_id }),
+      });
+    },
+
+    remove: async (issuer_id: string): Promise<{ message: string }> => {
+      return request<{ message: string }>(`/watchlist/${encodeURIComponent(issuer_id)}`, {
+        method: 'DELETE',
+      });
+    },
+  },
+
+  // 3. SAVED ARTICLES ENDPOINTS
+  savedArticles: {
+    get: async (): Promise<(Article & { saved_at?: string })[]> => {
+      return request<(Article & { saved_at?: string })[]>('/saved-articles', { method: 'GET' });
+    },
+
+    add: async (insight_id: string): Promise<{ message: string }> => {
+      return request<{ message: string }>(`/saved-articles/${encodeURIComponent(insight_id)}`, {
+        method: 'POST',
+      });
+    },
+
+    remove: async (insight_id: string): Promise<{ message: string }> => {
+      return request<{ message: string }>(`/saved-articles/${encodeURIComponent(insight_id)}`, {
+        method: 'DELETE',
+      });
+    },
+  },
+
+  // 4. INSIGHTS & CONTENT ENDPOINTS
+  insights: {
+    get: async (params: {
+      vertical?: string;
+      sort?: 'relevance' | 'recent';
+      limit?: number;
+      featured?: boolean;
+      featured_order?: number;
+      category?: string;
+      search?: string;
+      exclude_ids?: string[];
+    } = {}): Promise<Article[]> => {
+      const urlParams = new URLSearchParams();
+      if (params.vertical) urlParams.set('vertical', params.vertical);
+      if (params.sort) urlParams.set('sort', params.sort);
+      if (params.limit) urlParams.set('limit', params.limit.toString());
+      if (params.featured !== undefined) urlParams.set('featured', params.featured.toString());
+      if (params.featured_order !== undefined) urlParams.set('featured_order', params.featured_order.toString());
+      if (params.category) urlParams.set('category', params.category);
+      if (params.search) urlParams.set('search', params.search);
+      if (params.exclude_ids && params.exclude_ids.length > 0) {
+        urlParams.set('exclude_ids', params.exclude_ids.join(','));
+      }
+
+      const queryString = urlParams.toString();
+      const endpoint = `/insights${queryString ? `?${queryString}` : ''}`;
+      return request<Article[]>(endpoint, { method: 'GET' });
+    },
+
+    topSources: async (vertical?: string): Promise<TopSource[]> => {
+      const endpoint = `/insights/top-sources${vertical ? `?vertical=${encodeURIComponent(vertical)}` : ''}`;
+      return request<TopSource[]>(endpoint, { method: 'GET' });
+    },
+  },
+
+  // 5. EDITOR'S PICKS & REPORTS ENDPOINTS
+  editorsPicks: {
+    get: async (limit?: number): Promise<EditorsPickItem[]> => {
+      const endpoint = `/editors-picks${limit ? `?limit=${limit}` : ''}`;
+      return request<EditorsPickItem[]>(endpoint, { method: 'GET' });
+    },
+  },
+
+  reports: {
+    get: async (params: { vertical?: string; limit?: number } = {}): Promise<ReportItem[]> => {
+      const urlParams = new URLSearchParams();
+      if (params.vertical) urlParams.set('vertical', params.vertical);
+      if (params.limit) urlParams.set('limit', params.limit.toString());
+      const query = urlParams.toString();
+      return request<ReportItem[]>(`/reports${query ? `?${query}` : ''}`, { method: 'GET' });
+    },
+
+    getBySlug: async (slug: string): Promise<ReportItem> => {
+      return request<ReportItem>(`/reports/${encodeURIComponent(slug)}`, { method: 'GET' });
+    },
+  },
+
+  // ADMIN REPORT AUTHORING ENDPOINTS
+  admin: {
+    reports: {
+      getAll: async (): Promise<ReportItem[]> => {
+        return request<ReportItem[]>('/admin/reports', { method: 'GET' });
+      },
+
+      create: async (payload: {
+        title: string;
+        vertical: string;
+        summary: string;
+        body: string;
+        cover_image_url?: string;
+        status?: 'published' | 'draft';
+        featured?: boolean;
+        featured_order?: number;
+      }): Promise<ReportItem> => {
+        return request<ReportItem>('/admin/reports', {
+          method: 'POST',
+          body: JSON.stringify(payload),
+        });
+      },
+
+      update: async (
+        id: string,
+        payload: Partial<{
+          title: string;
+          vertical: string;
+          summary: string;
+          body: string;
+          cover_image_url: string;
+          status: 'published' | 'draft';
+          featured: boolean;
+          featured_order: number;
+        }>
+      ): Promise<ReportItem> => {
+        return request<ReportItem>(`/admin/reports/${encodeURIComponent(id)}`, {
+          method: 'PATCH',
+          body: JSON.stringify(payload),
+        });
+      },
+
+      delete: async (id: string): Promise<{ message: string }> => {
+        return request<{ message: string }>(`/admin/reports/${encodeURIComponent(id)}`, {
+          method: 'DELETE',
+        });
+      },
+    },
+  },
+
+  // 6. NEWSLETTER
+  newsletter: {
+    signup: async (email: string): Promise<NewsletterSignupResult> => {
+      return request<NewsletterSignupResult>('/newsletter-signup', {
+        method: 'POST',
+        body: JSON.stringify({ email }),
+      });
+    },
+  },
+
+  // 6. MARKET DATA
+  market: {
+    benchmark: async (): Promise<any> => {
+      return request<any>('/benchmark', { method: 'GET' });
+    },
+
+    peerMappings: async (): Promise<Record<string, string[]>> => {
+      return request<Record<string, string[]>>('/peer-mappings', { method: 'GET' });
+    },
+
+    issuers: async (): Promise<{ issuer_id: string; ticker: string; name: string; exchange: string; sector: string }[]> => {
+      return request<{ issuer_id: string; ticker: string; name: string; exchange: string; sector: string }[]>('/issuers', { method: 'GET' });
+    },
+
+    issuerPrices: async (id: string): Promise<StockData> => {
+      return request<StockData>(`/issuers/${encodeURIComponent(id)}/prices`, { method: 'GET' });
+    },
+
+    index: async (code: string): Promise<any> => {
+      return request<any>(`/indices/${encodeURIComponent(code)}`, { method: 'GET' });
+    },
+  },
+};

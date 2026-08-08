@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-serif: 'Source Serif 4', Georgia, serif;
+    --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-mono: 'Geist Mono', monospace;
+
+    /* Site-wide Brand Color Tokens sampled directly from Logo */
+    --brand-navy: #0A0F1A;
+    --brand-navy-dark: #070A12;
+    --brand-text-white: #F4F6FA;
+    --brand-accent: #22C55E;
+    --brand-accent-hover: #16A34A;
+    --brand-accent-light: #4ADE80;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: #FAFBFC;
+    color: #14181F;
+  }
+
+  h1, h2, h3, .font-serif-headline {
+    font-family: var(--font-serif);
+  }
+
+  .font-num {
+    font-family: var(--font-mono);
+  }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-ticker {
+  display: flex;
+  width: max-content;
+  animation: marquee 35s linear infinite;
+}
+
+.animate-ticker:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-ticker {
+    animation: none;
+  }
+}
