@@ -63,7 +63,7 @@ export const ScreenerView: React.FC<ScreenerViewProps> = ({
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* View Header */}
       <div className="border-b border-[#E3E8F1] pb-6">
-        <div className="flex items-center gap-2 text-[#1E5EFF] font-mono text-xs font-bold uppercase tracking-wider mb-1">
+        <div className="flex items-center gap-2 text-[#22C55E] font-mono text-xs font-bold uppercase tracking-wider mb-1">
           <SlidersHorizontal className="w-4 h-4" />
           <span>Research & Analytics Tools</span>
         </div>
@@ -79,7 +79,7 @@ export const ScreenerView: React.FC<ScreenerViewProps> = ({
       <div className="bg-white border border-[#E3E8F1] rounded-xl p-5 shadow-xs space-y-4">
         <div className="flex items-center justify-between border-b border-[#E3E8F1] pb-3">
           <div className="flex items-center gap-2 text-xs font-bold text-[#14181F]">
-            <Filter className="w-4 h-4 text-[#1E5EFF]" />
+            <Filter className="w-4 h-4 text-[#22C55E]" />
             <span>Active Screener Parameters</span>
           </div>
           <span className="text-xs text-[#5A6478] font-mono">
@@ -98,7 +98,7 @@ export const ScreenerView: React.FC<ScreenerViewProps> = ({
                 placeholder="Search symbol (e.g. DANGCEM)"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-[#FAFBFC] border border-[#E3E8F1] rounded-lg pl-9 pr-3 py-2 text-xs text-[#14181F] focus:outline-none focus:border-[#1E5EFF]"
+                className="w-full bg-[#FAFBFC] border border-[#E3E8F1] rounded-lg pl-9 pr-3 py-2 text-xs text-[#14181F] focus:outline-none focus:border-[#22C55E]"
               />
             </div>
           </div>
@@ -109,7 +109,7 @@ export const ScreenerView: React.FC<ScreenerViewProps> = ({
             <select
               value={selectedExchange}
               onChange={(e) => setSelectedExchange(e.target.value)}
-              className="w-full bg-[#FAFBFC] border border-[#E3E8F1] rounded-lg px-3 py-2 text-xs text-[#14181F] focus:outline-none focus:border-[#1E5EFF]"
+              className="w-full bg-[#FAFBFC] border border-[#E3E8F1] rounded-lg px-3 py-2 text-xs text-[#14181F] focus:outline-none focus:border-[#22C55E]"
             >
               <option value="ALL">All Exchanges (NGX, NASDAQ)</option>
               <option value="NGX">NGX - Nigerian Exchange</option>
@@ -123,7 +123,7 @@ export const ScreenerView: React.FC<ScreenerViewProps> = ({
             <select
               value={selectedSector}
               onChange={(e) => setSelectedSector(e.target.value)}
-              className="w-full bg-[#FAFBFC] border border-[#E3E8F1] rounded-lg px-3 py-2 text-xs text-[#14181F] focus:outline-none focus:border-[#1E5EFF]"
+              className="w-full bg-[#FAFBFC] border border-[#E3E8F1] rounded-lg px-3 py-2 text-xs text-[#14181F] focus:outline-none focus:border-[#22C55E]"
             >
               <option value="ALL">All Sectors</option>
               <option value="Industrial">Industrial & Cement</option>
@@ -147,7 +147,7 @@ export const ScreenerView: React.FC<ScreenerViewProps> = ({
               step="50"
               value={priceMax}
               onChange={(e) => setPriceMax(Number(e.target.value))}
-              className="w-full h-2 bg-[#E3E8F1] rounded-lg appearance-none cursor-pointer accent-[#1E5EFF] mt-2"
+              className="w-full h-2 bg-[#E3E8F1] rounded-lg appearance-none cursor-pointer accent-[#22C55E] mt-2"
             />
           </div>
         </div>
@@ -159,7 +159,7 @@ export const ScreenerView: React.FC<ScreenerViewProps> = ({
           <table className="w-full text-left text-xs text-[#14181F]">
             <thead className="bg-[#FAFBFC] text-[#5A6478] font-mono uppercase text-[10px] border-b border-[#E3E8F1]">
               <tr>
-                <th className="px-4 py-3 cursor-pointer hover:text-[#1E5EFF]" onClick={() => handleSort('symbol')}>
+                <th className="px-4 py-3 cursor-pointer hover:text-[#22C55E]" onClick={() => handleSort('symbol')}>
                   <div className="flex items-center gap-1">
                     <span>Symbol / Name</span>
                     <ArrowUpDown className="w-3 h-3" />
@@ -167,13 +167,13 @@ export const ScreenerView: React.FC<ScreenerViewProps> = ({
                 </th>
                 <th className="px-4 py-3">Exchange</th>
                 <th className="px-4 py-3">Sector</th>
-                <th className="px-4 py-3 cursor-pointer hover:text-[#1E5EFF]" onClick={() => handleSort('price')}>
+                <th className="px-4 py-3 cursor-pointer hover:text-[#22C55E]" onClick={() => handleSort('price')}>
                   <div className="flex items-center gap-1">
                     <span>Price</span>
                     <ArrowUpDown className="w-3 h-3" />
                   </div>
                 </th>
-                <th className="px-4 py-3 cursor-pointer hover:text-[#1E5EFF]" onClick={() => handleSort('changePercent')}>
+                <th className="px-4 py-3 cursor-pointer hover:text-[#22C55E]" onClick={() => handleSort('changePercent')}>
                   <div className="flex items-center gap-1">
                     <span>Day Change</span>
                     <ArrowUpDown className="w-3 h-3" />
@@ -196,7 +196,7 @@ export const ScreenerView: React.FC<ScreenerViewProps> = ({
                         <span>{stock.symbol}</span>
                         <button
                           onClick={() => onSelectStockChart(stock)}
-                          className="text-[#1E5EFF] hover:underline text-[10px] flex items-center gap-0.5 cursor-pointer font-normal"
+                          className="text-[#22C55E] hover:underline text-[10px] flex items-center gap-0.5 cursor-pointer font-normal"
                         >
                           <span>Chart</span>
                           <ExternalLink className="w-2.5 h-2.5" />
@@ -240,7 +240,7 @@ export const ScreenerView: React.FC<ScreenerViewProps> = ({
                         className={`inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-bold rounded-md transition-colors cursor-pointer ${
                           isWatchlisted
                             ? 'bg-[#00C48C]/10 border border-[#00C48C]/30 text-[#00C48C]'
-                            : 'bg-[#1E5EFF] text-white hover:bg-blue-600'
+                            : 'bg-[#22C55E] text-white hover:bg-[#16A34A]'
                         }`}
                       >
                         {isWatchlisted ? (

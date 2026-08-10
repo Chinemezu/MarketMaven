@@ -25,7 +25,7 @@ export const TerminalTeaseModal: React.FC<TerminalTeaseModalProps> = ({
           <X className="w-5 h-5" />
         </button>
 
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#1E5EFF]/20 border border-[#1E5EFF]/40 text-[#00D1B2] text-xs font-bold rounded-full uppercase tracking-wider mb-3">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#22C55E]/20 border border-[#22C55E]/40 text-[#22C55E] text-xs font-bold rounded-full uppercase tracking-wider mb-3">
           <BarChart3 className="w-3.5 h-3.5" /> MarketMaven Terminal Platform
         </div>
 
@@ -40,7 +40,7 @@ export const TerminalTeaseModal: React.FC<TerminalTeaseModalProps> = ({
         {/* Feature Grid Preview */}
         <div className="grid grid-cols-2 gap-3 mb-6 text-xs">
           <div className="p-3 bg-[#111726] border border-[#1F293D] rounded-lg space-y-1">
-            <div className="flex items-center gap-2 font-bold text-[#1E5EFF]">
+            <div className="flex items-center gap-2 font-bold text-[#22C55E]">
               <Activity className="w-4 h-4" /> Real-Time Order Flow
             </div>
             <p className="text-slate-400 text-[11px]">
@@ -91,7 +91,7 @@ export const TerminalTeaseModal: React.FC<TerminalTeaseModalProps> = ({
               alert('MarketMaven Terminal demo request received! An account executive will contact your firm.');
               onClose();
             }}
-            className="px-4 py-2 bg-[#1E5EFF] hover:bg-blue-600 text-white font-bold text-xs rounded-lg transition-colors shrink-0 flex items-center gap-1.5 cursor-pointer shadow-sm"
+            className="px-4 py-2 bg-[#22C55E] hover:bg-[#16A34A] text-white font-bold text-xs rounded-lg transition-colors shrink-0 flex items-center gap-1.5 cursor-pointer shadow-sm"
           >
             <span>Request Access</span>
             <ArrowRight className="w-3.5 h-3.5" />

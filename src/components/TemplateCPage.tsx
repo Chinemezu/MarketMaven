@@ -35,7 +35,7 @@ export const TemplateCPage: React.FC<TemplateCPageProps> = ({
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-16 text-center space-y-8">
       {/* Badge */}
-      <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#1E5EFF]/10 border border-[#1E5EFF]/30 text-[#1E5EFF] text-xs font-mono font-bold uppercase tracking-widest rounded-full">
+      <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#22C55E]/10 border border-[#22C55E]/30 text-[#22C55E] text-xs font-mono font-bold uppercase tracking-widest rounded-full">
         <Sparkles className="w-3.5 h-3.5" />
         <span>MarketMaven Wire Expansion • Coming Soon</span>
       </div>
@@ -53,7 +53,7 @@ export const TemplateCPage: React.FC<TemplateCPageProps> = ({
 
       {/* Feature Preview List */}
       <div className="bg-white border border-[#E3E8F1] rounded-2xl p-6 sm:p-8 max-w-xl mx-auto shadow-xs text-left space-y-4">
-        <h3 className="text-xs font-mono font-bold text-[#1E5EFF] uppercase tracking-wider">
+        <h3 className="text-xs font-mono font-bold text-[#22C55E] uppercase tracking-wider">
           Planned Intelligence Module Features
         </h3>
 
@@ -106,12 +106,12 @@ export const TemplateCPage: React.FC<TemplateCPageProps> = ({
               placeholder="subscriber@marketmaven.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="flex-1 bg-[#141A29] border border-white/10 rounded-lg px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#1E5EFF]"
+              className="flex-1 bg-[#141A29] border border-white/10 rounded-lg px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#22C55E]"
             />
             <button
               type="submit"
               disabled={loading}
-              className="px-5 py-2.5 bg-[#1E5EFF] hover:bg-blue-600 text-white font-bold text-xs uppercase tracking-wider rounded-lg transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md disabled:opacity-50"
+              className="px-5 py-2.5 bg-[#22C55E] hover:bg-[#16A34A] text-white font-bold text-xs uppercase tracking-wider rounded-lg transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md disabled:opacity-50"
             >
               {loading ? 'Submitting...' : 'Notify Me'}
               <ArrowRight className="w-3.5 h-3.5" />

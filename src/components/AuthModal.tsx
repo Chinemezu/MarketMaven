@@ -89,7 +89,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 setError(null);
               }}
               className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all ${
-                mode === 'login' ? 'bg-[#1E5EFF] text-white shadow-sm' : 'text-slate-400 hover:text-white'
+                mode === 'login' ? 'bg-[#22C55E] text-white shadow-sm' : 'text-slate-400 hover:text-white'
               }`}
             >
               Log In
@@ -101,7 +101,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 setError(null);
               }}
               className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all ${
-                mode === 'signup' ? 'bg-[#1E5EFF] text-white shadow-sm' : 'text-slate-400 hover:text-white'
+                mode === 'signup' ? 'bg-[#22C55E] text-white shadow-sm' : 'text-slate-400 hover:text-white'
               }`}
             >
               Sign Up
@@ -128,7 +128,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   placeholder="Alexander Hamilton"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full bg-[#141A29] border border-white/10 rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#1E5EFF]"
+                  className="w-full bg-[#141A29] border border-white/10 rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#22C55E]"
                 />
               </div>
             </div>
@@ -144,7 +144,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 placeholder="analyst@marketmaven.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-[#141A29] border border-white/10 rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#1E5EFF]"
+                className="w-full bg-[#141A29] border border-white/10 rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#22C55E]"
               />
             </div>
           </div>
@@ -159,7 +159,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-[#141A29] border border-white/10 rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#1E5EFF]"
+                className="w-full bg-[#141A29] border border-white/10 rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#22C55E]"
               />
             </div>
             <p className="text-[10px] text-slate-500 mt-1">Minimum 6 characters</p>
@@ -168,7 +168,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2.5 bg-[#1E5EFF] hover:bg-blue-600 font-semibold text-sm rounded-lg text-white transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md disabled:opacity-50"
+            className="w-full py-2.5 bg-[#22C55E] hover:bg-[#16A34A] font-semibold text-sm rounded-lg text-white transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md disabled:opacity-50"
           >
             {loading ? (
               <span>Processing...</span>
@@ -187,7 +187,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setMode('signup')}
-                  className="text-[#1E5EFF] hover:underline font-semibold"
+                  className="text-[#22C55E] hover:underline font-semibold"
                 >
                   Sign up free
                 </button>
@@ -198,7 +198,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setMode('login')}
-                  className="text-[#1E5EFF] hover:underline font-semibold"
+                  className="text-[#22C55E] hover:underline font-semibold"
                 >
                   Log in
                 </button>

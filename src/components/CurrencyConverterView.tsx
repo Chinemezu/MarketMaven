@@ -45,7 +45,7 @@ export const CurrencyConverterView: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Header */}
       <div className="border-b border-[#E3E8F1] pb-6">
-        <div className="flex items-center gap-2 text-[#1E5EFF] font-mono text-xs font-bold uppercase tracking-wider mb-1">
+        <div className="flex items-center gap-2 text-[#22C55E] font-mono text-xs font-bold uppercase tracking-wider mb-1">
           <ArrowLeftRight className="w-4 h-4" />
           <span>Research Tools • Foreign Exchange Desk</span>
         </div>
@@ -56,8 +56,8 @@ export const CurrencyConverterView: React.FC = () => {
           Convert cross-rates between African currencies (NGN, ZAR, KES) and major international pairs (USD, EUR, GBP, JPY) using real-time interbank spot rates.
         </p>
 
-        <div className="mt-4 bg-[#1E5EFF]/5 border border-[#1E5EFF]/20 rounded-lg p-3 text-xs text-[#14181F] flex items-center gap-2">
-          <Info className="w-4 h-4 text-[#1E5EFF] shrink-0" />
+        <div className="mt-4 bg-[#22C55E]/5 border border-[#22C55E]/20 rounded-lg p-3 text-xs text-[#14181F] flex items-center gap-2">
+          <Info className="w-4 h-4 text-[#22C55E] shrink-0" />
           <span>
             Dashed underline indicators (<span className="border-b border-dashed border-[#14181F] font-mono px-1 font-bold">1,524.50</span>) denote benchmark spot rates subject to central bank settlement windows.
           </span>
@@ -82,7 +82,7 @@ export const CurrencyConverterView: React.FC = () => {
               type="number"
               value={amount}
               onChange={(e) => setAmount(Number(e.target.value))}
-              className="w-full bg-[#141A29] border border-white/10 rounded-xl px-4 py-3 text-lg font-mono font-bold text-white focus:outline-none focus:border-[#1E5EFF]"
+              className="w-full bg-[#141A29] border border-white/10 rounded-xl px-4 py-3 text-lg font-mono font-bold text-white focus:outline-none focus:border-[#22C55E]"
             />
           </div>
 
@@ -92,7 +92,7 @@ export const CurrencyConverterView: React.FC = () => {
             <select
               value={baseCurrency}
               onChange={(e) => setBaseCurrency(e.target.value)}
-              className="w-full bg-[#141A29] border border-white/10 rounded-xl px-4 py-3 text-sm font-mono font-bold text-white focus:outline-none focus:border-[#1E5EFF]"
+              className="w-full bg-[#141A29] border border-white/10 rounded-xl px-4 py-3 text-sm font-mono font-bold text-white focus:outline-none focus:border-[#22C55E]"
             >
               <option value="USD">USD - United States Dollar</option>
               <option value="NGN">NGN - Nigerian Naira</option>
@@ -111,7 +111,7 @@ export const CurrencyConverterView: React.FC = () => {
             <select
               value={targetCurrency}
               onChange={(e) => setTargetCurrency(e.target.value)}
-              className="w-full bg-[#141A29] border border-white/10 rounded-xl px-4 py-3 text-sm font-mono font-bold text-white focus:outline-none focus:border-[#1E5EFF]"
+              className="w-full bg-[#141A29] border border-white/10 rounded-xl px-4 py-3 text-sm font-mono font-bold text-white focus:outline-none focus:border-[#22C55E]"
             >
               <option value="NGN">NGN - Nigerian Naira</option>
               <option value="USD">USD - United States Dollar</option>

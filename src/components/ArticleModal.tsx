@@ -50,7 +50,7 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
         {/* Sticky Modal Bar */}
         <div className="sticky top-0 bg-white/95 backdrop-blur-md px-6 py-4 border-b border-[#E3E8F1] flex items-center justify-between z-10">
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-1 bg-[#1E5EFF]/10 text-[#1E5EFF] text-xs font-bold rounded uppercase tracking-wider">
+            <span className="px-2.5 py-1 bg-[#22C55E]/10 text-[#22C55E] text-xs font-bold rounded uppercase tracking-wider">
               {article.category}
             </span>
             {article.premium && (
@@ -65,7 +65,7 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
               onClick={handleBookmarkClick}
               className={`p-2 rounded-lg border transition-all flex items-center gap-1.5 text-xs font-semibold cursor-pointer ${
                 isSaved
-                  ? 'bg-[#1E5EFF] text-white border-[#1E5EFF]'
+                  ? 'bg-[#22C55E] text-white border-[#22C55E]'
                   : 'text-[#5A6478] hover:text-[#14181F] hover:bg-[#FAFBFC] border-[#E3E8F1]'
               }`}
               title={isSaved ? 'Remove from saved articles' : 'Save article'}
@@ -112,7 +112,7 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
           {/* Meta Bar */}
           <div className="flex flex-wrap items-center gap-4 text-xs text-[#5A6478] pb-4 border-b border-[#E3E8F1]">
             <span className="font-semibold text-[#14181F] flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-[#1E5EFF]" />
+              <ShieldCheck className="w-4 h-4 text-[#22C55E]" />
               By {article.source}
             </span>
             <span>•</span>
@@ -134,7 +134,7 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
           </div>
 
           {/* Excerpt Lead */}
-          <p className="text-base sm:text-lg font-medium text-[#14181F] leading-relaxed italic border-l-4 border-[#1E5EFF] pl-4">
+          <p className="text-base sm:text-lg font-medium text-[#14181F] leading-relaxed italic border-l-4 border-[#22C55E] pl-4">
             {article.excerpt}
           </p>
 
@@ -159,7 +159,7 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
                       if (onSelectTag) onSelectTag(kw);
                       onClose();
                     }}
-                    className="text-xs font-medium text-[#1E5EFF] bg-[#1E5EFF]/10 border border-[#1E5EFF]/20 hover:bg-[#1E5EFF] hover:text-white px-3 py-1 rounded-full transition-colors cursor-pointer"
+                    className="text-xs font-medium text-[#22C55E] bg-[#22C55E]/10 border border-[#22C55E]/20 hover:bg-[#22C55E] hover:text-white px-3 py-1 rounded-full transition-colors cursor-pointer"
                   >
                     #{kw}
                   </button>

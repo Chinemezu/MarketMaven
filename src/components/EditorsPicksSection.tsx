@@ -349,7 +349,7 @@ export const EditorsPicksSection: React.FC<EditorsPicksSectionProps> = ({
                   href="https://twitter.com"
                   target="_blank"
                   rel="noreferrer"
-                  className="p-2.5 border border-[#E3E8F1] rounded-lg hover:border-[#1E5EFF] hover:text-[#1E5EFF] transition-colors flex items-center gap-2 text-[#5A6478] font-medium"
+                  className="p-2.5 border border-[#E3E8F1] rounded-lg hover:border-[#22C55E] hover:text-[#22C55E] transition-colors flex items-center gap-2 text-[#5A6478] font-medium"
                 >
                   <span className="font-bold">𝕏</span> Twitter / X
                 </a>
@@ -357,7 +357,7 @@ export const EditorsPicksSection: React.FC<EditorsPicksSectionProps> = ({
                   href="https://linkedin.com"
                   target="_blank"
                   rel="noreferrer"
-                  className="p-2.5 border border-[#E3E8F1] rounded-lg hover:border-[#1E5EFF] hover:text-[#1E5EFF] transition-colors flex items-center gap-2 text-[#5A6478] font-medium"
+                  className="p-2.5 border border-[#E3E8F1] rounded-lg hover:border-[#22C55E] hover:text-[#22C55E] transition-colors flex items-center gap-2 text-[#5A6478] font-medium"
                 >
                   <span className="font-bold">in</span> LinkedIn
                 </a>

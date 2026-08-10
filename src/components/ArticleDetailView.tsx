@@ -73,7 +73,7 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
         <div className="flex items-center justify-between border-b border-[#E3E8F1] pb-4">
           <button
             onClick={onBack}
-            className="inline-flex items-center gap-2 text-xs font-semibold text-[#5A6478] hover:text-[#1E5EFF] transition-colors group cursor-pointer"
+            className="inline-flex items-center gap-2 text-xs font-semibold text-[#5A6478] hover:text-[#22C55E] transition-colors group cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             <span>Back to Market News</span>
@@ -91,7 +91,7 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
         {/* Article Header Header Section */}
         <div className="space-y-4">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="px-3 py-1 bg-[#1E5EFF]/10 text-[#1E5EFF] text-xs font-bold rounded uppercase tracking-wider">
+            <span className="px-3 py-1 bg-[#22C55E]/10 text-[#22C55E] text-xs font-bold rounded uppercase tracking-wider">
               {article.category}
             </span>
             {article.premium && (
@@ -109,7 +109,7 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4 border-y border-[#E3E8F1] text-xs text-[#5A6478]">
             <div className="flex flex-wrap items-center gap-3">
               <span className="font-bold text-[#14181F] flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-[#1E5EFF]" />
+                <ShieldCheck className="w-4 h-4 text-[#22C55E]" />
                 {article.source}
               </span>
               <span>•</span>
@@ -126,7 +126,7 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
                 onClick={handleBookmarkClick}
                 className={`px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 text-xs font-semibold cursor-pointer ${
                   isSaved
-                    ? 'bg-[#1E5EFF] text-white border-[#1E5EFF]'
+                    ? 'bg-[#22C55E] text-white border-[#22C55E]'
                     : 'text-[#5A6478] hover:text-[#14181F] hover:bg-white border-[#E3E8F1] bg-[#FAFBFC]'
                 }`}
                 title={isSaved ? 'Remove from saved' : 'Save article'}
@@ -166,7 +166,7 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
         </div>
 
         {/* Excerpt Lead */}
-        <div className="bg-white border-l-4 border-[#1E5EFF] border-y border-r border-[#E3E8F1] p-5 sm:p-6 rounded-r-xl shadow-xs">
+        <div className="bg-white border-l-4 border-[#22C55E] border-y border-r border-[#E3E8F1] p-5 sm:p-6 rounded-r-xl shadow-xs">
           <p className="text-lg sm:text-xl font-medium text-[#14181F] leading-relaxed italic">
             "{article.excerpt}"
           </p>
@@ -186,7 +186,7 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
           {article.keywords && article.keywords.length > 0 && (
             <div className="pt-8 border-t border-[#E3E8F1]">
               <div className="flex items-center gap-2 mb-3">
-                <Tag className="w-4 h-4 text-[#1E5EFF]" />
+                <Tag className="w-4 h-4 text-[#22C55E]" />
                 <span className="text-xs font-bold uppercase tracking-wider text-[#5A6478]">
                   Topics & Tags
                 </span>
@@ -199,7 +199,7 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
                       if (onSelectTag) onSelectTag(kw);
                       onBack();
                     }}
-                    className="text-xs font-medium text-[#1E5EFF] bg-[#1E5EFF]/10 border border-[#1E5EFF]/20 hover:bg-[#1E5EFF] hover:text-white px-3 py-1.5 rounded-full transition-colors cursor-pointer"
+                    className="text-xs font-medium text-[#22C55E] bg-[#22C55E]/10 border border-[#22C55E]/20 hover:bg-[#22C55E] hover:text-white px-3 py-1.5 rounded-full transition-colors cursor-pointer"
                   >
                     #{kw}
                   </button>
@@ -219,7 +219,7 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
               </h3>
               <button
                 onClick={onBack}
-                className="text-xs font-bold text-[#1E5EFF] hover:underline flex items-center gap-1 cursor-pointer"
+                className="text-xs font-bold text-[#22C55E] hover:underline flex items-center gap-1 cursor-pointer"
               >
                 View All Wire Stories <ChevronRight className="w-3.5 h-3.5" />
               </button>
@@ -230,7 +230,7 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
                 <div
                   key={rel.id}
                   onClick={() => onSelectArticle(rel)}
-                  className="bg-white rounded-xl border border-[#E3E8F1] overflow-hidden hover:border-[#1E5EFF] hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between"
+                  className="bg-white rounded-xl border border-[#E3E8F1] overflow-hidden hover:border-[#22C55E] hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between"
                 >
                   <div>
                     <div className="aspect-[16/10] overflow-hidden bg-slate-100">
@@ -241,10 +241,10 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
                       />
                     </div>
                     <div className="p-4 space-y-2">
-                      <span className="text-[10px] font-bold text-[#1E5EFF] uppercase font-mono">
+                      <span className="text-[10px] font-bold text-[#22C55E] uppercase font-mono">
                         {rel.category}
                       </span>
-                      <h4 className="font-serif text-sm font-bold text-[#14181F] group-hover:text-[#1E5EFF] transition-colors line-clamp-2">
+                      <h4 className="font-serif text-sm font-bold text-[#14181F] group-hover:text-[#22C55E] transition-colors line-clamp-2">
                         {rel.title}
                       </h4>
                       <p className="text-xs text-[#5A6478] line-clamp-2">

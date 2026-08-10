@@ -19,9 +19,9 @@ export const SpotlightSection: React.FC<SpotlightSectionProps> = ({
     <section className="py-10 bg-[#FAFBFC] border-b border-[#E3E8F1]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="flex items-center justify-between border-b-2 border-[#1E5EFF] pb-3 mb-8">
+        <div className="flex items-center justify-between border-b-2 border-[#22C55E] pb-3 mb-8">
           <div className="flex items-center gap-3">
-            <span className="w-3 h-3 bg-[#1E5EFF] rounded-sm"></span>
+            <span className="w-3 h-3 bg-[#22C55E] rounded-sm"></span>
             <h2 className="font-serif text-2xl font-bold text-[#14181F]">
               Market Spotlight & Deep Dives
             </h2>
@@ -47,7 +47,7 @@ export const SpotlightSection: React.FC<SpotlightSectionProps> = ({
               </div>
 
               <div className="flex items-center justify-between gap-2 mb-3">
-                <span className="px-2.5 py-1 bg-[#1E5EFF]/10 text-[#1E5EFF] text-xs font-bold rounded uppercase tracking-wider">
+                <span className="px-2.5 py-1 bg-[#22C55E]/10 text-[#22C55E] text-xs font-bold rounded uppercase tracking-wider">
                   {mainStory.category}
                 </span>
                 <span className="font-num text-xs text-[#5A6478] flex items-center gap-1">
@@ -56,7 +56,7 @@ export const SpotlightSection: React.FC<SpotlightSectionProps> = ({
                 </span>
               </div>
 
-              <h3 className="font-serif text-2xl font-bold text-[#14181F] group-hover:text-[#1E5EFF] transition-colors leading-snug mb-3">
+              <h3 className="font-serif text-2xl font-bold text-[#14181F] group-hover:text-[#22C55E] transition-colors leading-snug mb-3">
                 {mainStory.title}
               </h3>
 
@@ -72,7 +72,7 @@ export const SpotlightSection: React.FC<SpotlightSectionProps> = ({
                       key={kw}
                       className="inline-flex items-center gap-1 text-[11px] text-[#5A6478] bg-[#F0F4FA] px-2 py-0.5 rounded"
                     >
-                      <Tag className="w-3 h-3 text-[#1E5EFF]" />
+                      <Tag className="w-3 h-3 text-[#22C55E]" />
                       #{kw}
                     </span>
                   ))}
@@ -92,7 +92,7 @@ export const SpotlightSection: React.FC<SpotlightSectionProps> = ({
               <div
                 key={story.id}
                 onClick={() => onArticleClick(story)}
-                className="bg-white rounded-lg border border-[#E3E8F1] p-4 flex gap-4 hover:border-[#1E5EFF] transition-all group cursor-pointer shadow-sm"
+                className="bg-white rounded-lg border border-[#E3E8F1] p-4 flex gap-4 hover:border-[#22C55E] transition-all group cursor-pointer shadow-sm"
               >
                 <div className="w-28 sm:w-32 h-24 shrink-0 rounded overflow-hidden bg-slate-100">
                   <img
@@ -103,10 +103,10 @@ export const SpotlightSection: React.FC<SpotlightSectionProps> = ({
                 </div>
                 <div className="flex flex-col justify-between flex-1">
                   <div>
-                    <span className="text-[10px] font-bold text-[#1E5EFF] uppercase tracking-wider block mb-1">
+                    <span className="text-[10px] font-bold text-[#22C55E] uppercase tracking-wider block mb-1">
                       {story.category}
                     </span>
-                    <h4 className="font-serif text-sm font-bold text-[#14181F] group-hover:text-[#1E5EFF] transition-colors leading-tight line-clamp-2 mb-1">
+                    <h4 className="font-serif text-sm font-bold text-[#14181F] group-hover:text-[#22C55E] transition-colors leading-tight line-clamp-2 mb-1">
                       {story.title}
                     </h4>
                   </div>

@@ -108,7 +108,7 @@ export const AuthPagesView: React.FC<AuthPagesViewProps> = ({
                 type="button"
                 onClick={() => onNavigate('/login', 'login')}
                 className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
-                  mode === 'login' ? 'bg-[#1E5EFF] text-white shadow-md' : 'text-slate-400 hover:text-white'
+                  mode === 'login' ? 'bg-[#22C55E] text-white shadow-md' : 'text-slate-400 hover:text-white'
                 }`}
               >
                 Log In
@@ -117,7 +117,7 @@ export const AuthPagesView: React.FC<AuthPagesViewProps> = ({
                 type="button"
                 onClick={() => onNavigate('/register', 'register')}
                 className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
-                  mode === 'register' ? 'bg-[#1E5EFF] text-white shadow-md' : 'text-slate-400 hover:text-white'
+                  mode === 'register' ? 'bg-[#22C55E] text-white shadow-md' : 'text-slate-400 hover:text-white'
                 }`}
               >
                 Register
@@ -154,7 +154,7 @@ export const AuthPagesView: React.FC<AuthPagesViewProps> = ({
                     placeholder="Alexander Hamilton"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full bg-[#141A29] border border-white/10 rounded-xl pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#1E5EFF] transition-colors"
+                    className="w-full bg-[#141A29] border border-white/10 rounded-xl pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#22C55E] transition-colors"
                   />
                 </div>
               </div>
@@ -171,7 +171,7 @@ export const AuthPagesView: React.FC<AuthPagesViewProps> = ({
                     placeholder="analyst@marketmaven.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full bg-[#141A29] border border-white/10 rounded-xl pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#1E5EFF] transition-colors"
+                    className="w-full bg-[#141A29] border border-white/10 rounded-xl pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#22C55E] transition-colors"
                   />
                 </div>
               </div>
@@ -185,7 +185,7 @@ export const AuthPagesView: React.FC<AuthPagesViewProps> = ({
                     <button
                       type="button"
                       onClick={() => onNavigate('/forgot-password', 'forgot-password')}
-                      className="text-[11px] text-[#1E5EFF] hover:underline cursor-pointer"
+                      className="text-[11px] text-[#22C55E] hover:underline cursor-pointer"
                     >
                       Forgot password?
                     </button>
@@ -199,7 +199,7 @@ export const AuthPagesView: React.FC<AuthPagesViewProps> = ({
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full bg-[#141A29] border border-white/10 rounded-xl pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#1E5EFF] transition-colors"
+                    className="w-full bg-[#141A29] border border-white/10 rounded-xl pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#22C55E] transition-colors"
                   />
                 </div>
                 {mode === 'register' && <p className="text-[10px] text-slate-500 mt-1">Minimum 6 characters</p>}
@@ -217,7 +217,7 @@ export const AuthPagesView: React.FC<AuthPagesViewProps> = ({
                       required
                       value={resetToken}
                       onChange={(e) => setResetToken(e.target.value)}
-                      className="w-full bg-[#141A29] border border-white/10 rounded-xl pl-9 pr-3 py-2 text-sm font-mono text-white placeholder-slate-500 focus:outline-none focus:border-[#1E5EFF]"
+                      className="w-full bg-[#141A29] border border-white/10 rounded-xl pl-9 pr-3 py-2 text-sm font-mono text-white placeholder-slate-500 focus:outline-none focus:border-[#22C55E]"
                     />
                   </div>
                 </div>
@@ -232,7 +232,7 @@ export const AuthPagesView: React.FC<AuthPagesViewProps> = ({
                       placeholder="••••••••"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
-                      className="w-full bg-[#141A29] border border-white/10 rounded-xl pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#1E5EFF]"
+                      className="w-full bg-[#141A29] border border-white/10 rounded-xl pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#22C55E]"
                     />
                   </div>
                 </div>
@@ -242,7 +242,7 @@ export const AuthPagesView: React.FC<AuthPagesViewProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-[#1E5EFF] hover:bg-blue-600 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 mt-4"
+              className="w-full py-3 bg-[#22C55E] hover:bg-[#16A34A] text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 mt-4"
             >
               {loading ? (
                 <span>Communicating with MarketMaven Wire...</span>
@@ -266,7 +266,7 @@ export const AuthPagesView: React.FC<AuthPagesViewProps> = ({
               <button
                 type="button"
                 onClick={() => onNavigate('/login', 'login')}
-                className="flex items-center gap-1 text-[#1E5EFF] hover:underline font-semibold cursor-pointer"
+                className="flex items-center gap-1 text-[#22C55E] hover:underline font-semibold cursor-pointer"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>Return to Log In</span>
@@ -277,7 +277,7 @@ export const AuthPagesView: React.FC<AuthPagesViewProps> = ({
                 <button
                   type="button"
                   onClick={() => onNavigate('/register', 'register')}
-                  className="text-[#1E5EFF] hover:underline font-bold cursor-pointer"
+                  className="text-[#22C55E] hover:underline font-bold cursor-pointer"
                 >
                   Create free account
                 </button>
@@ -288,7 +288,7 @@ export const AuthPagesView: React.FC<AuthPagesViewProps> = ({
                 <button
                   type="button"
                   onClick={() => onNavigate('/login', 'login')}
-                  className="text-[#1E5EFF] hover:underline font-bold cursor-pointer"
+                  className="text-[#22C55E] hover:underline font-bold cursor-pointer"
                 >
                   Sign in
                 </button>

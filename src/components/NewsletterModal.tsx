@@ -74,14 +74,14 @@ export const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClos
               onChange={(e) => setEmail(e.target.value)}
               placeholder="name@company.com"
               required
-              className="w-full px-4 py-3 bg-[#151D2F] border border-[#2A3752] text-white placeholder-slate-400 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E5EFF]"
+              className="w-full px-4 py-3 bg-[#151D2F] border border-[#2A3752] text-white placeholder-slate-400 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-[#22C55E]"
             />
           </div>
 
           <button
             type="submit"
             disabled={statusState === 'submitting'}
-            className="w-full py-3 bg-[#1E5EFF] hover:bg-blue-600 text-white font-bold text-sm rounded-lg transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-md"
+            className="w-full py-3 bg-[#22C55E] hover:bg-[#16A34A] text-white font-bold text-sm rounded-lg transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-md"
           >
             {statusState === 'submitting' ? (
               'Subscribing...'

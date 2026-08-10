@@ -57,6 +57,25 @@ export default function App() {
     template: 'home',
   });
 
+  // Theme Mode State
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const saved = localStorage.getItem('mm_theme');
+    return (saved === 'dark' || saved === 'light') ? saved : 'light';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('mm_theme', theme);
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
+
+  const handleToggleTheme = () => {
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
+
   // Account & Persistence States
   const [currentUser, setCurrentUser] = useState<User | null>(() => {
     const saved = localStorage.getItem('mm_user');
@@ -664,6 +683,8 @@ export default function App() {
         currentPath={currentNavItem.path}
         currentUser={currentUser}
         savedArticlesCount={savedArticleIds.length}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
         onNavigate={handleNavigate}
         onOpenSearch={() => setSearchModalOpen(true)}
         onOpenSubscribe={() => setSubscribeModalOpen(true)}

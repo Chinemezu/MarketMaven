@@ -41,7 +41,7 @@ export const TemplateBPage: React.FC<TemplateBPageProps> = ({ title, subtitle, t
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Category Header */}
       <div className="border-b border-[#E3E8F1] pb-6">
-        <div className="flex items-center gap-2 text-[#1E5EFF] font-mono text-xs font-bold uppercase tracking-wider mb-1">
+        <div className="flex items-center gap-2 text-[#22C55E] font-mono text-xs font-bold uppercase tracking-wider mb-1">
           <DollarSign className="w-4 h-4" />
           <span>Market Data & FX Rate Desk</span>
         </div>
@@ -51,7 +51,7 @@ export const TemplateBPage: React.FC<TemplateBPageProps> = ({ title, subtitle, t
         </p>
 
         {/* Convention Banner */}
-        <div className="mt-4 bg-[#1E5EFF]/5 border border-[#1E5EFF]/20 rounded-lg p-3 text-xs text-[#14181F] flex items-center gap-2">
+        <div className="mt-4 bg-[#22C55E]/5 border border-[#22C55E]/20 rounded-lg p-3 text-xs text-[#14181F] flex items-center gap-2">
           <Info className="w-4 h-4 text-[#22C55E] shrink-0" />
           <span>
             Note: Figures underlined with a <span className="border-b border-dashed border-[#14181F] font-mono px-1 font-bold">dashed style</span> represent estimated market benchmark values subject to final settlement confirmation.
@@ -76,7 +76,7 @@ export const TemplateBPage: React.FC<TemplateBPageProps> = ({ title, subtitle, t
               type="number"
               value={fromAmount}
               onChange={(e) => setFromAmount(Number(e.target.value))}
-              className="w-full bg-[#141A29] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white font-mono focus:outline-none focus:border-[#1E5EFF]"
+              className="w-full bg-[#141A29] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white font-mono focus:outline-none focus:border-[#22C55E]"
             />
           </div>
 
@@ -85,7 +85,7 @@ export const TemplateBPage: React.FC<TemplateBPageProps> = ({ title, subtitle, t
             <select
               value={fromCurrency}
               onChange={(e) => setFromCurrency(e.target.value)}
-              className="w-full bg-[#141A29] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white font-mono focus:outline-none focus:border-[#1E5EFF]"
+              className="w-full bg-[#141A29] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white font-mono focus:outline-none focus:border-[#22C55E]"
             >
               <option value="USD">USD - US Dollar</option>
               <option value="NGN">NGN - Nigerian Naira</option>
@@ -101,7 +101,7 @@ export const TemplateBPage: React.FC<TemplateBPageProps> = ({ title, subtitle, t
             <select
               value={toCurrency}
               onChange={(e) => setToCurrency(e.target.value)}
-              className="w-full bg-[#141A29] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white font-mono focus:outline-none focus:border-[#1E5EFF]"
+              className="w-full bg-[#141A29] border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-white font-mono focus:outline-none focus:border-[#22C55E]"
             >
               <option value="NGN">NGN - Nigerian Naira</option>
               <option value="USD">USD - US Dollar</option>

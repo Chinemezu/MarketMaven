@@ -67,7 +67,7 @@ export const AdminReportsView: React.FC<AdminReportsViewProps> = ({
           </p>
           <button
             onClick={onNavigateHome}
-            className="px-5 py-2.5 bg-[#1E5EFF] text-white text-xs font-semibold rounded-lg hover:bg-blue-600 transition-colors inline-flex items-center gap-2 cursor-pointer"
+            className="px-5 py-2.5 bg-[#22C55E] text-white text-xs font-semibold rounded-lg hover:bg-[#16A34A] transition-colors inline-flex items-center gap-2 cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" /> Return to Public Homepage
           </button>
@@ -160,7 +160,7 @@ export const AdminReportsView: React.FC<AdminReportsViewProps> = ({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#E3E8F1] mb-8">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="px-2.5 py-0.5 bg-indigo-100 text-indigo-700 font-bold text-[10px] uppercase rounded-full">
+              <span className="px-2.5 py-0.5 bg-emerald-100 text-emerald-700 font-bold text-[10px] uppercase rounded-full">
                 ADMIN PORTAL
               </span>
               <span className="text-xs text-[#5A6478]">Logged in as <strong>{user.name}</strong></span>
@@ -173,13 +173,13 @@ export const AdminReportsView: React.FC<AdminReportsViewProps> = ({
           <div className="flex items-center gap-3">
             <button
               onClick={onNavigateHome}
-              className="px-4 py-2 bg-white border border-[#E3E8F1] hover:border-[#1E5EFF] text-xs font-semibold text-[#5A6478] rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="px-4 py-2 bg-white border border-[#E3E8F1] hover:border-[#22C55E] text-xs font-semibold text-[#5A6478] rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer"
             >
               <ArrowLeft className="w-4 h-4" /> Exit Admin
             </button>
             <button
               onClick={handleOpenCreateForm}
-              className="px-4 py-2 bg-[#1E5EFF] hover:bg-blue-600 text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-2 cursor-pointer shadow-xs"
+              className="px-4 py-2 bg-[#22C55E] hover:bg-[#16A34A] text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-2 cursor-pointer shadow-xs"
             >
               <Plus className="w-4 h-4" /> Author New Report
             </button>
@@ -206,7 +206,7 @@ export const AdminReportsView: React.FC<AdminReportsViewProps> = ({
           <div className="bg-white border border-[#E3E8F1] rounded-2xl p-6 sm:p-8 shadow-md mb-8">
             <div className="flex items-center justify-between pb-4 border-b border-[#E3E8F1] mb-6">
               <h2 className="font-serif text-xl font-bold text-[#14181F] flex items-center gap-2">
-                <FileText className="w-5 h-5 text-[#1E5EFF]" />
+                <FileText className="w-5 h-5 text-[#22C55E]" />
                 {editingReportId ? 'Edit First-Party Report' : 'Author New Special Report'}
               </h2>
               <button
@@ -229,7 +229,7 @@ export const AdminReportsView: React.FC<AdminReportsViewProps> = ({
                     value={formValues.title}
                     onChange={(e) => setFormValues({ ...formValues, title: e.target.value })}
                     placeholder="e.g. Special Report: Sub-Saharan Sovereign Debt Liquidity"
-                    className="w-full px-3.5 py-2.5 border border-[#E3E8F1] text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E5EFF]"
+                    className="w-full px-3.5 py-2.5 border border-[#E3E8F1] text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-[#22C55E]"
                   />
                 </div>
 
@@ -240,7 +240,7 @@ export const AdminReportsView: React.FC<AdminReportsViewProps> = ({
                   <select
                     value={formValues.vertical}
                     onChange={(e) => setFormValues({ ...formValues, vertical: e.target.value })}
-                    className="w-full px-3.5 py-2.5 border border-[#E3E8F1] text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E5EFF]"
+                    className="w-full px-3.5 py-2.5 border border-[#E3E8F1] text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-[#22C55E]"
                   >
                     {verticals.map((v) => (
                       <option key={v} value={v}>{v}</option>
@@ -259,7 +259,7 @@ export const AdminReportsView: React.FC<AdminReportsViewProps> = ({
                   value={formValues.summary}
                   onChange={(e) => setFormValues({ ...formValues, summary: e.target.value })}
                   placeholder="Concise 2-sentence summary for list views and cards"
-                  className="w-full px-3.5 py-2.5 border border-[#E3E8F1] text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E5EFF]"
+                  className="w-full px-3.5 py-2.5 border border-[#E3E8F1] text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-[#22C55E]"
                 />
               </div>
 
@@ -273,7 +273,7 @@ export const AdminReportsView: React.FC<AdminReportsViewProps> = ({
                   value={formValues.body}
                   onChange={(e) => setFormValues({ ...formValues, body: e.target.value })}
                   placeholder="Format with # Headings, > Quotes, - Lists..."
-                  className="w-full px-3.5 py-2.5 border border-[#E3E8F1] font-mono text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E5EFF]"
+                  className="w-full px-3.5 py-2.5 border border-[#E3E8F1] font-mono text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-[#22C55E]"
                 />
               </div>
 
@@ -287,7 +287,7 @@ export const AdminReportsView: React.FC<AdminReportsViewProps> = ({
                     value={formValues.cover_image_url}
                     onChange={(e) => setFormValues({ ...formValues, cover_image_url: e.target.value })}
                     placeholder="https://images.unsplash.com/..."
-                    className="w-full px-3.5 py-2.5 border border-[#E3E8F1] text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E5EFF]"
+                    className="w-full px-3.5 py-2.5 border border-[#E3E8F1] text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-[#22C55E]"
                   />
                 </div>
 
@@ -298,7 +298,7 @@ export const AdminReportsView: React.FC<AdminReportsViewProps> = ({
                   <select
                     value={formValues.status}
                     onChange={(e) => setFormValues({ ...formValues, status: e.target.value as any })}
-                    className="w-full px-3.5 py-2.5 border border-[#E3E8F1] text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E5EFF]"
+                    className="w-full px-3.5 py-2.5 border border-[#E3E8F1] text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-[#22C55E]"
                   >
                     <option value="published">Published</option>
                     <option value="draft">Draft</option>
@@ -311,7 +311,7 @@ export const AdminReportsView: React.FC<AdminReportsViewProps> = ({
                       type="checkbox"
                       checked={formValues.featured}
                       onChange={(e) => setFormValues({ ...formValues, featured: e.target.checked })}
-                      className="w-4 h-4 text-[#1E5EFF] rounded"
+                      className="w-4 h-4 text-[#22C55E] rounded"
                     />
                     <span>Feature in Editor's Picks</span>
                   </label>
@@ -343,7 +343,7 @@ export const AdminReportsView: React.FC<AdminReportsViewProps> = ({
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-6 py-2 bg-[#1E5EFF] hover:bg-blue-600 text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-2 cursor-pointer shadow-xs"
+                  className="px-6 py-2 bg-[#22C55E] hover:bg-[#16A34A] text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-2 cursor-pointer shadow-xs"
                 >
                   {submitting ? 'Saving Report...' : (
                     <>
@@ -401,7 +401,7 @@ export const AdminReportsView: React.FC<AdminReportsViewProps> = ({
                       </td>
                       <td className="py-3.5 px-4">
                         {r.featured ? (
-                          <span className="text-indigo-600 font-bold text-[11px] flex items-center gap-1">
+                          <span className="text-emerald-600 font-bold text-[11px] flex items-center gap-1">
                             <Sparkles className="w-3 h-3" /> Yes (#{r.featured_order})
                           </span>
                         ) : (
@@ -417,7 +417,7 @@ export const AdminReportsView: React.FC<AdminReportsViewProps> = ({
                           <button
                             onClick={() => onViewReport(r.slug)}
                             title="Preview Public Report"
-                            className="p-1.5 text-slate-500 hover:text-[#1E5EFF] cursor-pointer"
+                            className="p-1.5 text-slate-500 hover:text-[#22C55E] cursor-pointer"
                           >
                             <Eye className="w-4 h-4" />
                           </button>
@@ -425,7 +425,7 @@ export const AdminReportsView: React.FC<AdminReportsViewProps> = ({
                         <button
                           onClick={() => handleOpenEditForm(r)}
                           title="Edit Report"
-                          className="p-1.5 text-slate-500 hover:text-[#1E5EFF] cursor-pointer"
+                          className="p-1.5 text-slate-500 hover:text-[#22C55E] cursor-pointer"
                         >
                           <Edit3 className="w-4 h-4" />
                         </button>

@@ -15,14 +15,14 @@ export const ValuePropStrip: React.FC<ValuePropStripProps> = ({
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4 text-[#14181F]">
         {/* Pitch 1: Newsletter */}
         <div className="flex items-center gap-2 text-[#14181F] font-medium">
-          <span className="inline-flex items-center justify-center p-1 bg-[#1E5EFF]/10 text-[#1E5EFF] rounded shrink-0">
+          <span className="inline-flex items-center justify-center p-1 bg-[#22C55E]/10 text-[#22C55E] rounded shrink-0">
             <Mail className="w-3.5 h-3.5" />
           </span>
           <span>
             Get daily frontier & financial markets intelligence delivered to your inbox.{' '}
             <button
               onClick={onOpenSubscribe}
-              className="text-[#1E5EFF] font-semibold hover:underline cursor-pointer inline-flex items-center gap-1"
+              className="text-[#22C55E] font-semibold hover:underline cursor-pointer inline-flex items-center gap-1"
             >
               Sign up for our newsletter
             </button>
@@ -38,10 +38,10 @@ export const ValuePropStrip: React.FC<ValuePropStripProps> = ({
             Looking for real-time order flow & terminal data?{' '}
             <button
               onClick={onOpenTerminalTease}
-              className="text-[#14181F] font-semibold hover:text-[#1E5EFF] cursor-pointer inline-flex items-center gap-0.5 group"
+              className="text-[#14181F] font-semibold hover:text-[#22C55E] cursor-pointer inline-flex items-center gap-0.5 group"
             >
               Get the full picture
-              <ArrowRight className="w-3.5 h-3.5 text-[#1E5EFF] group-hover:translate-x-0.5 transition-transform" />
+              <ArrowRight className="w-3.5 h-3.5 text-[#22C55E] group-hover:translate-x-0.5 transition-transform" />
             </button>
           </span>
         </div>

@@ -68,8 +68,8 @@ export const ReportsListView: React.FC<ReportsListViewProps> = ({
               onClick={() => setActiveVertical(v)}
               className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
                 activeVertical === v
-                  ? 'bg-[#1E5EFF] text-white shadow-xs'
-                  : 'bg-white border border-[#E3E8F1] text-[#5A6478] hover:border-[#1E5EFF] hover:text-[#14181F]'
+                  ? 'bg-[#22C55E] text-white shadow-xs'
+                  : 'bg-white border border-[#E3E8F1] text-[#5A6478] hover:border-[#22C55E] hover:text-[#14181F]'
               }`}
             >
               {v}
@@ -99,7 +99,7 @@ export const ReportsListView: React.FC<ReportsListViewProps> = ({
               <article
                 key={report.id}
                 onClick={() => onSelectReport(report.slug)}
-                className="bg-white border border-[#E3E8F1] hover:border-[#1E5EFF] rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all group cursor-pointer flex flex-col justify-between"
+                className="bg-white border border-[#E3E8F1] hover:border-[#22C55E] rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all group cursor-pointer flex flex-col justify-between"
               >
                 <div>
                   <div className="aspect-[16/10] overflow-hidden bg-slate-100 relative">
@@ -108,13 +108,13 @@ export const ReportsListView: React.FC<ReportsListViewProps> = ({
                       alt={report.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    <span className="absolute top-3 left-3 px-2.5 py-1 bg-[#1E5EFF] text-white text-[10px] font-bold uppercase rounded-full shadow">
+                    <span className="absolute top-3 left-3 px-2.5 py-1 bg-[#22C55E] text-white text-[10px] font-bold uppercase rounded-full shadow">
                       {report.vertical}
                     </span>
                   </div>
 
                   <div className="p-6">
-                    <h3 className="font-serif text-xl font-bold text-[#14181F] group-hover:text-[#1E5EFF] transition-colors leading-snug mb-3">
+                    <h3 className="font-serif text-xl font-bold text-[#14181F] group-hover:text-[#22C55E] transition-colors leading-snug mb-3">
                       {report.title}
                     </h3>
                     <p className="text-xs sm:text-sm text-[#5A6478] line-clamp-3 leading-relaxed mb-4">
@@ -125,10 +125,10 @@ export const ReportsListView: React.FC<ReportsListViewProps> = ({
 
                 <div className="px-6 pb-6 pt-3 border-t border-[#E3E8F1] flex items-center justify-between text-xs text-[#5A6478]">
                   <span className="font-semibold text-[#14181F] flex items-center gap-1.5">
-                    <ShieldCheck className="w-3.5 h-3.5 text-[#1E5EFF]" />
+                    <ShieldCheck className="w-3.5 h-3.5 text-[#22C55E]" />
                     {report.author_name}
                   </span>
-                  <span className="flex items-center gap-1 text-[#1E5EFF] font-semibold group-hover:translate-x-1 transition-transform">
+                  <span className="flex items-center gap-1 text-[#22C55E] font-semibold group-hover:translate-x-1 transition-transform">
                     Read Report <ArrowRight className="w-3.5 h-3.5" />
                   </span>
                 </div>

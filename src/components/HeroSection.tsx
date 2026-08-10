@@ -63,7 +63,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 )}
 
                 {/* Headline in Source Serif 4 */}
-                <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#14181F] leading-tight group-hover:text-[#1E5EFF] transition-colors mb-3">
+                <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#14181F] leading-tight group-hover:text-[#22C55E] transition-colors mb-3">
                   {leadStory.title}
                 </h1>
 
@@ -75,7 +75,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 {/* Meta Byline and Timestamp */}
                 <div className="flex items-center gap-3 text-xs text-[#5A6478] mt-auto pt-2 border-t border-[#E3E8F1]">
                   <span className="font-semibold text-[#14181F] flex items-center gap-1">
-                    <ShieldCheck className="w-3.5 h-3.5 text-[#1E5EFF]" />
+                    <ShieldCheck className="w-3.5 h-3.5 text-[#22C55E]" />
                     By {leadStory.source}
                   </span>
                   <span>•</span>
@@ -95,8 +95,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           {/* MIDDLE COLUMN: Dense Recent Headlines List (3 cols) */}
           <div className="lg:col-span-3 border-t lg:border-t-0 lg:border-l lg:border-r border-[#E3E8F1] lg:px-6 pt-6 lg:pt-0">
             <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#E3E8F1]">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-[#1E5EFF] flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#1E5EFF]"></span>
+              <h2 className="text-xs font-bold uppercase tracking-wider text-[#22C55E] flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#22C55E]"></span>
                 Recent Wire Updates
               </h2>
               <span className="text-[11px] font-num text-[#5A6478]">LIVE FEED</span>
@@ -110,14 +110,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   className="pt-3 first:pt-0 group cursor-pointer"
                 >
                   <div className="flex items-center justify-between text-[11px] text-[#5A6478] mb-1">
-                    <span className="font-semibold text-[#1E5EFF] uppercase tracking-wider">
+                    <span className="font-semibold text-[#22C55E] uppercase tracking-wider">
                       {story.category}
                     </span>
                     <span className="font-num text-[11px] text-[#5A6478]">
                       {story.relativeTime}
                     </span>
                   </div>
-                  <h3 className="font-serif text-sm font-semibold text-[#14181F] group-hover:text-[#1E5EFF] transition-colors leading-snug line-clamp-2 mb-1.5">
+                  <h3 className="font-serif text-sm font-semibold text-[#14181F] group-hover:text-[#22C55E] transition-colors leading-snug line-clamp-2 mb-1.5">
                     {story.title}
                   </h3>
                   <p className="text-[11px] text-[#5A6478] font-medium">
@@ -150,7 +150,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   />
                 </div>
                 <div className="flex items-center gap-2 mb-1.5">
-                  <span className="text-[10px] font-bold text-[#1E5EFF] uppercase tracking-wider">
+                  <span className="text-[10px] font-bold text-[#22C55E] uppercase tracking-wider">
                     {story.category}
                   </span>
                   {story.premium && (
@@ -159,7 +159,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     </span>
                   )}
                 </div>
-                <h3 className="font-serif text-base font-bold text-[#14181F] group-hover:text-[#1E5EFF] transition-colors leading-snug line-clamp-2 mb-2">
+                <h3 className="font-serif text-base font-bold text-[#14181F] group-hover:text-[#22C55E] transition-colors leading-snug line-clamp-2 mb-2">
                   {story.title}
                 </h3>
                 <div className="flex items-center justify-between text-[11px] text-[#5A6478]">

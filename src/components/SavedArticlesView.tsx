@@ -24,7 +24,7 @@ export const SavedArticlesView: React.FC<SavedArticlesViewProps> = ({
   if (!currentUser) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-16 text-center space-y-6">
-        <div className="w-16 h-16 bg-[#1E5EFF]/10 border border-[#1E5EFF]/30 text-[#1E5EFF] rounded-full flex items-center justify-center mx-auto">
+        <div className="w-16 h-16 bg-[#22C55E]/10 border border-[#22C55E]/30 text-[#22C55E] rounded-full flex items-center justify-center mx-auto">
           <Bookmark className="w-8 h-8" />
         </div>
         <h1 className="text-3xl font-serif font-bold text-[#14181F]">
@@ -35,7 +35,7 @@ export const SavedArticlesView: React.FC<SavedArticlesViewProps> = ({
         </p>
         <button
           onClick={onOpenAuthPrompt}
-          className="px-6 py-3 bg-[#1E5EFF] hover:bg-blue-600 text-white font-bold text-xs uppercase tracking-wider rounded-lg transition-all shadow-md cursor-pointer"
+          className="px-6 py-3 bg-[#22C55E] hover:bg-[#16A34A] text-white font-bold text-xs uppercase tracking-wider rounded-lg transition-all shadow-md cursor-pointer"
         >
           Sign In or Create Account
         </button>
@@ -48,7 +48,7 @@ export const SavedArticlesView: React.FC<SavedArticlesViewProps> = ({
       {/* Category Header */}
       <div className="border-b border-[#E3E8F1] pb-6 flex items-center justify-between">
         <div>
-          <div className="flex items-center gap-2 text-[#1E5EFF] font-mono text-xs font-bold uppercase tracking-wider mb-1">
+          <div className="flex items-center gap-2 text-[#22C55E] font-mono text-xs font-bold uppercase tracking-wider mb-1">
             <Bookmark className="w-4 h-4" />
             <span>Personal Reading List</span>
           </div>
@@ -114,7 +114,7 @@ export const SavedArticlesView: React.FC<SavedArticlesViewProps> = ({
                 <div>
                   <h3
                     onClick={() => onArticleClick(article)}
-                    className="font-serif font-bold text-lg text-[#14181F] group-hover:text-[#1E5EFF] leading-snug cursor-pointer transition-colors line-clamp-2"
+                    className="font-serif font-bold text-lg text-[#14181F] group-hover:text-[#22C55E] leading-snug cursor-pointer transition-colors line-clamp-2"
                   >
                     {article.title}
                   </h3>
@@ -132,7 +132,7 @@ export const SavedArticlesView: React.FC<SavedArticlesViewProps> = ({
 
                   <button
                     onClick={() => onArticleClick(article)}
-                    className="font-bold text-[#1E5EFF] hover:underline flex items-center gap-1 cursor-pointer"
+                    className="font-bold text-[#22C55E] hover:underline flex items-center gap-1 cursor-pointer"
                   >
                     <span>Read Story</span>
                     <ArrowUpRight className="w-3.5 h-3.5" />

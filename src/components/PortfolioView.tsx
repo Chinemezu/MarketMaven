@@ -161,7 +161,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
   if (!currentUser) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-16 text-center space-y-6">
-        <div className="w-16 h-16 bg-[#1E5EFF]/10 border border-[#1E5EFF]/30 text-[#1E5EFF] rounded-full flex items-center justify-center mx-auto">
+        <div className="w-16 h-16 bg-[#22C55E]/10 border border-[#22C55E]/30 text-[#22C55E] rounded-full flex items-center justify-center mx-auto">
           <TrendingUp className="w-8 h-8" />
         </div>
         <h1 className="text-3xl font-serif font-bold text-[#14181F]">
@@ -172,7 +172,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
         </p>
         <button
           onClick={onOpenAuthPrompt}
-          className="px-6 py-3 bg-[#1E5EFF] hover:bg-blue-600 text-white font-bold text-xs uppercase tracking-wider rounded-lg transition-all shadow-md cursor-pointer"
+          className="px-6 py-3 bg-[#22C55E] hover:bg-[#16A34A] text-white font-bold text-xs uppercase tracking-wider rounded-lg transition-all shadow-md cursor-pointer"
         >
           Sign In or Register Free Account
         </button>
@@ -186,7 +186,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
       {/* Page Title & Status */}
       <div className="border-b border-[#E3E8F1] pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-[#1E5EFF] font-mono text-xs font-bold uppercase tracking-wider mb-1">
+          <div className="flex items-center gap-2 text-[#22C55E] font-mono text-xs font-bold uppercase tracking-wider mb-1">
             <Activity className="w-4 h-4" />
             <span>Unified Terminal & Monitor</span>
           </div>
@@ -210,7 +210,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
       <section className="space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="font-serif text-xl font-bold text-[#14181F] flex items-center gap-2">
-            <LineChart className="w-5 h-5 text-[#1E5EFF]" />
+            <LineChart className="w-5 h-5 text-[#22C55E]" />
             <span>Market Overview & Major Indices</span>
           </h2>
           <span className="text-xs font-mono text-[#5A6478]">GLOBAL & REGIONAL BENCHMARKS</span>
@@ -258,7 +258,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
         <div className="bg-white border border-[#E3E8F1] rounded-2xl shadow-xs overflow-hidden">
           <div className="p-4 bg-[#FAFBFC] border-b border-[#E3E8F1] flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-[#14181F] flex items-center gap-2">
-              <Layers className="w-4 h-4 text-[#1E5EFF]" /> Benchmark Instruments
+              <Layers className="w-4 h-4 text-[#22C55E]" /> Benchmark Instruments
             </span>
             <span className="text-[11px] font-mono text-[#5A6478]">REAL-TIME REFRESH</span>
           </div>
@@ -316,7 +316,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
                           className={`px-2.5 py-1 rounded text-[11px] font-sans font-semibold transition-all cursor-pointer ${
                             isFollowing
                               ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                              : 'bg-[#1E5EFF] text-white hover:bg-blue-600'
+                              : 'bg-[#22C55E] text-white hover:bg-[#16A34A]'
                           }`}
                         >
                           {isFollowing ? '✓ Following' : '+ Follow'}
@@ -338,7 +338,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h2 className="font-serif text-2xl font-bold text-[#14181F] flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-[#1E5EFF]" />
+              <TrendingUp className="w-5 h-5 text-[#22C55E]" />
               <span>My Watchlist</span>
             </h2>
             <p className="text-xs text-[#5A6478]">
@@ -351,7 +351,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
             <select
               value={selectedAddSymbol}
               onChange={(e) => setSelectedAddSymbol(e.target.value)}
-              className="bg-white border border-[#E3E8F1] rounded-xl px-3.5 py-2 text-xs font-mono text-[#14181F] focus:outline-none focus:border-[#1E5EFF] shadow-xs"
+              className="bg-white border border-[#E3E8F1] rounded-xl px-3.5 py-2 text-xs font-mono text-[#14181F] focus:outline-none focus:border-[#22C55E] shadow-xs"
             >
               <option value="">+ Add ticker to watchlist...</option>
               {availableToAdd.map((s) => (
@@ -363,7 +363,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
             <button
               type="submit"
               disabled={!selectedAddSymbol}
-              className="px-4 py-2 bg-[#1E5EFF] hover:bg-blue-600 text-white font-bold text-xs rounded-xl transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shadow-xs"
+              className="px-4 py-2 bg-[#22C55E] hover:bg-[#16A34A] text-white font-bold text-xs rounded-xl transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shadow-xs"
             >
               <Plus className="w-4 h-4" />
               <span>Add</span>
@@ -381,7 +381,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
                 placeholder="Search followed tickers..."
                 value={searchFilter}
                 onChange={(e) => setSearchFilter(e.target.value)}
-                className="w-full bg-white border border-[#E3E8F1] rounded-xl pl-9 pr-3.5 py-2 text-xs text-[#14181F] focus:outline-none focus:border-[#1E5EFF]"
+                className="w-full bg-white border border-[#E3E8F1] rounded-xl pl-9 pr-3.5 py-2 text-xs text-[#14181F] focus:outline-none focus:border-[#22C55E]"
               />
             </div>
           </div>
@@ -505,7 +505,7 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
                     </span>
                     <button
                       onClick={() => onSelectStockChart(stock)}
-                      className="font-bold text-[#1E5EFF] hover:underline flex items-center gap-1 cursor-pointer text-xs"
+                      className="font-bold text-[#22C55E] hover:underline flex items-center gap-1 cursor-pointer text-xs"
                     >
                       <span>Interactive Chart</span>
                       <ExternalLink className="w-3.5 h-3.5" />

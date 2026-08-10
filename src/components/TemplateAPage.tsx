@@ -37,7 +37,7 @@ export const TemplateAPage: React.FC<TemplateAPageProps> = ({
       {/* Category Header */}
       <div className="border-b border-[#E3E8F1] pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <div className="text-[#1E5EFF] font-mono text-xs font-bold uppercase tracking-widest mb-1 flex items-center gap-2">
+          <div className="text-[#22C55E] font-mono text-xs font-bold uppercase tracking-widest mb-1 flex items-center gap-2">
             <Newspaper className="w-4 h-4" />
             <span>Market Intelligence Category</span>
           </div>
@@ -54,7 +54,7 @@ export const TemplateAPage: React.FC<TemplateAPageProps> = ({
             placeholder="Filter section stories..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-white border border-[#E3E8F1] rounded-lg px-3.5 py-2 text-xs text-[#14181F] placeholder-slate-400 focus:outline-none focus:border-[#1E5EFF] shadow-xs"
+            className="w-full bg-white border border-[#E3E8F1] rounded-lg px-3.5 py-2 text-xs text-[#14181F] placeholder-slate-400 focus:outline-none focus:border-[#22C55E] shadow-xs"
           />
         </div>
       </div>
@@ -103,7 +103,7 @@ export const TemplateAPage: React.FC<TemplateAPageProps> = ({
                     }}
                     className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur-xs transition-all cursor-pointer ${
                       isSaved
-                        ? 'bg-[#1E5EFF] text-white shadow-md'
+                        ? 'bg-[#22C55E] text-white shadow-md'
                         : 'bg-black/40 hover:bg-black/70 text-white'
                     }`}
                     title={isSaved ? 'Remove from saved' : 'Save article'}
@@ -122,7 +122,7 @@ export const TemplateAPage: React.FC<TemplateAPageProps> = ({
                   <div>
                     <h3
                       onClick={() => onArticleClick(article)}
-                      className="font-serif font-bold text-lg text-[#14181F] group-hover:text-[#1E5EFF] leading-snug cursor-pointer transition-colors line-clamp-2"
+                      className="font-serif font-bold text-lg text-[#14181F] group-hover:text-[#22C55E] leading-snug cursor-pointer transition-colors line-clamp-2"
                     >
                       {article.title}
                     </h3>
@@ -140,7 +140,7 @@ export const TemplateAPage: React.FC<TemplateAPageProps> = ({
 
                     <button
                       onClick={() => onArticleClick(article)}
-                      className="font-bold text-[#1E5EFF] hover:underline flex items-center gap-1 cursor-pointer"
+                      className="font-bold text-[#22C55E] hover:underline flex items-center gap-1 cursor-pointer"
                     >
                       <span>Read Story</span>
                       <ArrowUpRight className="w-3.5 h-3.5" />

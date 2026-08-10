@@ -25,7 +25,7 @@ export const AdvancedChartsView: React.FC<AdvancedChartsViewProps> = ({ initialS
       {/* Header */}
       <div className="border-b border-[#E3E8F1] pb-4 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-[#1E5EFF] font-mono text-xs font-bold uppercase tracking-wider mb-1">
+          <div className="flex items-center gap-2 text-[#22C55E] font-mono text-xs font-bold uppercase tracking-wider mb-1">
             <LineChart className="w-4 h-4" />
             <span>Research & Technical Terminal</span>
           </div>
@@ -43,7 +43,7 @@ export const AdvancedChartsView: React.FC<AdvancedChartsViewProps> = ({ initialS
               const found = MOCK_STOCKS.find((s) => s.symbol === e.target.value);
               if (found) setSelectedStock(found);
             }}
-            className="w-full bg-white border border-[#E3E8F1] rounded-lg px-3.5 py-2 text-xs font-mono font-bold text-[#14181F] focus:outline-none focus:border-[#1E5EFF] shadow-xs"
+            className="w-full bg-white border border-[#E3E8F1] rounded-lg px-3.5 py-2 text-xs font-mono font-bold text-[#14181F] focus:outline-none focus:border-[#22C55E] shadow-xs"
           >
             {MOCK_STOCKS.map((stock) => (
               <option key={stock.symbol} value={stock.symbol}>
@@ -60,7 +60,7 @@ export const AdvancedChartsView: React.FC<AdvancedChartsViewProps> = ({ initialS
           onClick={() => setActiveTab('chart')}
           className={`pb-3 border-b-2 transition-colors cursor-pointer ${
             activeTab === 'chart'
-              ? 'border-[#1E5EFF] text-[#1E5EFF]'
+              ? 'border-[#22C55E] text-[#22C55E]'
               : 'border-transparent text-[#5A6478] hover:text-[#14181F]'
           }`}
         >
@@ -71,12 +71,12 @@ export const AdvancedChartsView: React.FC<AdvancedChartsViewProps> = ({ initialS
           onClick={() => setActiveTab('financials')}
           className={`pb-3 border-b-2 transition-colors cursor-pointer flex items-center gap-1.5 ${
             activeTab === 'financials'
-              ? 'border-[#1E5EFF] text-[#1E5EFF]'
+              ? 'border-[#22C55E] text-[#22C55E]'
               : 'border-transparent text-[#5A6478] hover:text-[#14181F]'
           }`}
         >
           <span>Financial Statements</span>
-          <span className="bg-[#1E5EFF]/10 text-[#1E5EFF] text-[9px] px-1.5 py-0.5 rounded font-mono">
+          <span className="bg-[#22C55E]/10 text-[#22C55E] text-[9px] px-1.5 py-0.5 rounded font-mono">
             COMING SOON
           </span>
         </button>
@@ -138,7 +138,7 @@ export const AdvancedChartsView: React.FC<AdvancedChartsViewProps> = ({ initialS
                     key={tf}
                     onClick={() => setTimeframe(tf)}
                     className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
-                      timeframe === tf ? 'bg-[#1E5EFF] text-white font-bold' : 'text-slate-400 hover:text-white'
+                      timeframe === tf ? 'bg-[#22C55E] text-white font-bold' : 'text-slate-400 hover:text-white'
                     }`}
                   >
                     {tf}
@@ -153,7 +153,7 @@ export const AdvancedChartsView: React.FC<AdvancedChartsViewProps> = ({ initialS
                     type="checkbox"
                     checked={showSMA}
                     onChange={(e) => setShowSMA(e.target.checked)}
-                    className="accent-[#1E5EFF] rounded"
+                    className="accent-[#22C55E] rounded"
                   />
                   <span>SMA (20/50)</span>
                 </label>
@@ -216,7 +216,7 @@ export const AdvancedChartsView: React.FC<AdvancedChartsViewProps> = ({ initialS
                   {chartPoints.map((p, i) => (
                     <div
                       key={i}
-                      className="flex-1 bg-[#1E5EFF]/40 hover:bg-[#1E5EFF] rounded-t transition-all"
+                      className="flex-1 bg-[#22C55E]/40 hover:bg-[#22C55E] rounded-t transition-all"
                       style={{ height: `${20 + (i % 3) * 20}%` }}
                     />
                   ))}

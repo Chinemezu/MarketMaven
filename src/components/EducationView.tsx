@@ -16,7 +16,7 @@ export const EducationView: React.FC<EducationViewProps> = ({ guideId, onSelectG
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Category Header */}
       <div className="border-b border-[#E3E8F1] pb-6">
-        <div className="flex items-center gap-2 text-[#1E5EFF] font-mono text-xs font-bold uppercase tracking-wider mb-1">
+        <div className="flex items-center gap-2 text-[#22C55E] font-mono text-xs font-bold uppercase tracking-wider mb-1">
           <BookOpen className="w-4 h-4" />
           <span>MarketMaven Academy • {guide.category}</span>
         </div>
@@ -49,7 +49,7 @@ export const EducationView: React.FC<EducationViewProps> = ({ guideId, onSelectG
                     onClick={() => onSelectGuide(key)}
                     className={`w-full text-left px-3 py-2 text-xs rounded-lg transition-all cursor-pointer ${
                       isActive
-                        ? 'bg-[#1E5EFF] text-white font-bold'
+                        ? 'bg-[#22C55E] text-white font-bold'
                         : 'text-slate-300 hover:text-white hover:bg-[#141A29]'
                     }`}
                   >
@@ -61,9 +61,9 @@ export const EducationView: React.FC<EducationViewProps> = ({ guideId, onSelectG
             </div>
           </div>
 
-          <div className="bg-[#1E5EFF]/5 border border-[#1E5EFF]/20 rounded-xl p-4 text-xs space-y-2">
+          <div className="bg-[#22C55E]/5 border border-[#22C55E]/20 rounded-xl p-4 text-xs space-y-2">
             <div className="font-bold text-[#14181F] flex items-center gap-1.5">
-              <Award className="w-4 h-4 text-[#1E5EFF]" />
+              <Award className="w-4 h-4 text-[#22C55E]" />
               <span>Free Financial Literacy</span>
             </div>
             <p className="text-[#5A6478]">
@@ -75,8 +75,8 @@ export const EducationView: React.FC<EducationViewProps> = ({ guideId, onSelectG
         {/* Main Guide Content */}
         <div className="lg:col-span-3 space-y-8">
           {/* Summary Box */}
-          <div className="bg-white border-l-4 border-l-[#1E5EFF] border-y border-r border-[#E3E8F1] rounded-r-xl p-6 shadow-xs">
-            <h3 className="text-xs font-mono font-bold text-[#1E5EFF] uppercase tracking-wider mb-2">
+          <div className="bg-white border-l-4 border-l-[#22C55E] border-y border-r border-[#E3E8F1] rounded-r-xl p-6 shadow-xs">
+            <h3 className="text-xs font-mono font-bold text-[#22C55E] uppercase tracking-wider mb-2">
               Executive Overview
             </h3>
             <p className="text-sm font-serif text-[#14181F] leading-relaxed italic">{guide.summary}</p>

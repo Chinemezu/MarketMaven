@@ -14,12 +14,16 @@ import {
   TrendingUp,
   LogOut,
   Sparkles,
+  Sun,
+  Moon,
 } from 'lucide-react';
 
 interface HeaderProps {
   currentPath: string;
   currentUser: User | null;
   savedArticlesCount: number;
+  theme?: 'light' | 'dark';
+  onToggleTheme?: () => void;
   onNavigate: (item: NavItem) => void;
   onOpenSearch: () => void;
   onOpenSubscribe: () => void;
@@ -31,6 +35,8 @@ export const Header: React.FC<HeaderProps> = ({
   currentPath,
   currentUser,
   savedArticlesCount,
+  theme = 'light',
+  onToggleTheme,
   onNavigate,
   onOpenSearch,
   onOpenSubscribe,
@@ -178,6 +184,22 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <Search className="w-5 h-5" />
             </button>
+
+            {/* Dark / Light Theme Toggle */}
+            {onToggleTheme && (
+              <button
+                onClick={onToggleTheme}
+                className="p-2 text-slate-300 hover:text-white hover:bg-[#151D2F] rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-[#22C55E] cursor-pointer"
+                title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                aria-label="Toggle theme mode"
+              >
+                {theme === 'dark' ? (
+                  <Sun className="w-5 h-5 text-amber-400" />
+                ) : (
+                  <Moon className="w-5 h-5 text-slate-300" />
+                )}
+              </button>
+            )}
 
             {/* Auth / Account Menu */}
             {currentUser ? (
@@ -330,7 +352,7 @@ export const Header: React.FC<HeaderProps> = ({
                     >
                       <ChevronDown
                         className={`w-4 h-4 transition-transform duration-200 ${
-                          isExpanded ? 'rotate-180 text-[#1E5EFF]' : ''
+                          isExpanded ? 'rotate-180 text-[#22C55E]' : ''
                         }`}
                       />
                     </button>
@@ -361,7 +383,7 @@ export const Header: React.FC<HeaderProps> = ({
                               >
                                 <ChevronDown
                                   className={`w-3.5 h-3.5 transition-transform ${
-                                    isSubExpanded ? 'rotate-180 text-[#1E5EFF]' : ''
+                                    isSubExpanded ? 'rotate-180 text-[#22C55E]' : ''
                                   }`}
                                 />
                               </button>
@@ -370,7 +392,7 @@ export const Header: React.FC<HeaderProps> = ({
 
                           {/* Mobile Nested Sub-children */}
                           {hasSubChildren && isSubExpanded && (
-                            <div className="pl-3 mt-1 space-y-1 border-l border-[#1E5EFF]/30 ml-2">
+                            <div className="pl-3 mt-1 space-y-1 border-l border-[#22C55E]/30 ml-2">
                               {subItem.children?.map((nestedItem) => (
                                 <button
                                   key={nestedItem.id}

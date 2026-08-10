@@ -45,7 +45,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
       >
         {/* Search Bar Header */}
         <div className="p-4 border-b border-[#E3E8F1] flex items-center gap-3 bg-[#FAFBFC]">
-          <Search className="w-5 h-5 text-[#1E5EFF] shrink-0" />
+          <Search className="w-5 h-5 text-[#22C55E] shrink-0" />
           <input
             type="text"
             value={query}
@@ -74,7 +74,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
         <div className="p-4 max-h-[60vh] overflow-y-auto divide-y divide-[#E3E8F1]">
           {filteredArticles.length === 0 ? (
             <div className="py-12 text-center text-slate-500 text-sm">
-              No matching articles found for "{query}". Try searching for <span className="font-semibold text-[#1E5EFF]">Naira</span>, <span className="font-semibold text-[#1E5EFF]">Fed</span>, <span className="font-semibold text-[#1E5EFF]">Inflation</span>, or <span className="font-semibold text-[#1E5EFF]">Fintech</span>.
+              No matching articles found for "{query}". Try searching for <span className="font-semibold text-[#22C55E]">Naira</span>, <span className="font-semibold text-[#22C55E]">Fed</span>, <span className="font-semibold text-[#22C55E]">Inflation</span>, or <span className="font-semibold text-[#22C55E]">Fintech</span>.
             </div>
           ) : (
             filteredArticles.map((art) => (
@@ -92,7 +92,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
 
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[10px] font-bold text-[#1E5EFF] uppercase tracking-wider">
+                    <span className="text-[10px] font-bold text-[#22C55E] uppercase tracking-wider">
                       {art.category}
                     </span>
                     <span className="font-num text-[11px] text-[#5A6478] ml-auto">
@@ -100,7 +100,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                     </span>
                   </div>
 
-                  <h4 className="font-serif text-sm font-bold text-[#14181F] group-hover:text-[#1E5EFF] transition-colors leading-snug line-clamp-2 mb-1">
+                  <h4 className="font-serif text-sm font-bold text-[#14181F] group-hover:text-[#22C55E] transition-colors leading-snug line-clamp-2 mb-1">
                     {art.title}
                   </h4>
 

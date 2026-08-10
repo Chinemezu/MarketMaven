@@ -60,7 +60,7 @@ export const ReportDetailView: React.FC<ReportDetailViewProps> = ({ slug, onBack
           </p>
           <button
             onClick={onBack}
-            className="px-5 py-2.5 bg-[#1E5EFF] text-white text-xs font-semibold rounded-lg hover:bg-blue-600 transition-colors inline-flex items-center gap-2 cursor-pointer"
+            className="px-5 py-2.5 bg-[#22C55E] text-white text-xs font-semibold rounded-lg hover:bg-[#16A34A] transition-colors inline-flex items-center gap-2 cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" /> Return to Homepage
           </button>
@@ -102,7 +102,7 @@ export const ReportDetailView: React.FC<ReportDetailViewProps> = ({ slug, onBack
 
       if (trimmed.startsWith('> ')) {
         return (
-          <blockquote key={idx} className="my-6 p-4 border-l-4 border-[#1E5EFF] bg-blue-50/40 italic text-[#14181F] rounded-r-lg font-serif">
+          <blockquote key={idx} className="my-6 p-4 border-l-4 border-[#22C55E] bg-emerald-50/40 italic text-[#14181F] rounded-r-lg font-serif">
             {trimmed.replace('> ', '')}
           </blockquote>
         );
@@ -139,7 +139,7 @@ export const ReportDetailView: React.FC<ReportDetailViewProps> = ({ slug, onBack
         {/* Back navigation */}
         <button
           onClick={onBack}
-          className="mb-8 px-4 py-2 bg-white border border-[#E3E8F1] hover:border-[#1E5EFF] text-[#5A6478] hover:text-[#1E5EFF] text-xs font-semibold rounded-lg transition-colors inline-flex items-center gap-2 cursor-pointer shadow-2xs"
+          className="mb-8 px-4 py-2 bg-white border border-[#E3E8F1] hover:border-[#22C55E] text-[#5A6478] hover:text-[#22C55E] text-xs font-semibold rounded-lg transition-colors inline-flex items-center gap-2 cursor-pointer shadow-2xs"
         >
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
@@ -148,7 +148,7 @@ export const ReportDetailView: React.FC<ReportDetailViewProps> = ({ slug, onBack
         <div className="bg-white border border-[#E3E8F1] rounded-2xl p-6 sm:p-10 shadow-sm mb-8">
           
           <div className="flex items-center gap-3 mb-4 flex-wrap">
-            <span className="px-3 py-1 bg-[#1E5EFF] text-white text-xs font-bold rounded-full uppercase tracking-wider">
+            <span className="px-3 py-1 bg-[#22C55E] text-white text-xs font-bold rounded-full uppercase tracking-wider">
               {report.vertical}
             </span>
             <span className="px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-bold rounded-full uppercase tracking-wider flex items-center gap-1">
@@ -160,14 +160,14 @@ export const ReportDetailView: React.FC<ReportDetailViewProps> = ({ slug, onBack
             {report.title}
           </h1>
 
-          <p className="text-base sm:text-lg text-[#5A6478] leading-relaxed mb-8 font-sans border-l-2 border-[#1E5EFF] pl-4 italic">
+          <p className="text-base sm:text-lg text-[#5A6478] leading-relaxed mb-8 font-sans border-l-2 border-[#22C55E] pl-4 italic">
             {report.summary}
           </p>
 
           <div className="pt-6 border-t border-[#E3E8F1] flex flex-wrap items-center justify-between gap-4 text-xs sm:text-sm text-[#5A6478]">
             <div className="flex items-center gap-4">
               <span className="flex items-center gap-1.5 font-semibold text-[#14181F]">
-                <User className="w-4 h-4 text-[#1E5EFF]" />
+                <User className="w-4 h-4 text-[#22C55E]" />
                 {report.author_name}
               </span>
               <span className="flex items-center gap-1.5">
@@ -191,9 +191,9 @@ export const ReportDetailView: React.FC<ReportDetailViewProps> = ({ slug, onBack
                   alert('Report URL copied to clipboard');
                 }
               }}
-              className="px-3 py-1.5 bg-[#FAFBFC] border border-[#E3E8F1] hover:border-[#1E5EFF] rounded-lg text-xs font-medium text-[#14181F] flex items-center gap-1.5 cursor-pointer"
+              className="px-3 py-1.5 bg-[#FAFBFC] border border-[#E3E8F1] hover:border-[#22C55E] rounded-lg text-xs font-medium text-[#14181F] flex items-center gap-1.5 cursor-pointer"
             >
-              <Share2 className="w-3.5 h-3.5 text-[#1E5EFF]" /> Share Report
+              <Share2 className="w-3.5 h-3.5 text-[#22C55E]" /> Share Report
             </button>
           </div>
         </div>
