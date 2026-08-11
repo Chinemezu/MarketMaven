@@ -371,12 +371,6 @@ export const InfoPagesView: React.FC<InfoPagesViewProps> = ({ page, onNavigate }
                       <strong className="text-white">Authentication token (`localStorage`)</strong> — if you're logged in, a session token is stored in your browser's local storage so you don't have to log in on every visit. This is not a tracking cookie; it identifies your session, not your browsing activity elsewhere.
                     </div>
                   </li>
-                  <li className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] mt-1.5 shrink-0" />
-                    <div>
-                      <strong className="text-white">Theme preference</strong> (dark/light mode), if you've set one.
-                    </div>
-                  </li>
                 </ul>
               </div>
 
@@ -396,7 +390,7 @@ export const InfoPagesView: React.FC<InfoPagesViewProps> = ({ page, onNavigate }
                   Clearing Your Data
                 </h3>
                 <p className="text-xs text-slate-300 leading-relaxed">
-                  Clearing your browser's local storage will log you out and reset your theme preference. No account data is lost — everything tied to your account (watchlist, saved articles) lives on our server, not in your browser.
+                  Clearing your browser's local storage will log you out. No account data is lost — everything tied to your account (watchlist, saved articles) lives on our server, not in your browser.
                 </p>
               </div>
             </div>

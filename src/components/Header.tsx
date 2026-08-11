@@ -14,16 +14,12 @@ import {
   TrendingUp,
   LogOut,
   Sparkles,
-  Sun,
-  Moon,
 } from 'lucide-react';
 
 interface HeaderProps {
   currentPath: string;
   currentUser: User | null;
   savedArticlesCount: number;
-  theme?: 'light' | 'dark';
-  onToggleTheme?: () => void;
   onNavigate: (item: NavItem) => void;
   onOpenSearch: () => void;
   onOpenSubscribe: () => void;
@@ -35,8 +31,6 @@ export const Header: React.FC<HeaderProps> = ({
   currentPath,
   currentUser,
   savedArticlesCount,
-  theme = 'light',
-  onToggleTheme,
   onNavigate,
   onOpenSearch,
   onOpenSubscribe,
@@ -184,22 +178,6 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <Search className="w-5 h-5" />
             </button>
-
-            {/* Dark / Light Theme Toggle */}
-            {onToggleTheme && (
-              <button
-                onClick={onToggleTheme}
-                className="p-2 text-slate-300 hover:text-white hover:bg-[#151D2F] rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-[#22C55E] cursor-pointer"
-                title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-                aria-label="Toggle theme mode"
-              >
-                {theme === 'dark' ? (
-                  <Sun className="w-5 h-5 text-amber-400" />
-                ) : (
-                  <Moon className="w-5 h-5 text-slate-300" />
-                )}
-              </button>
-            )}
 
             {/* Auth / Account Menu */}
             {currentUser ? (
