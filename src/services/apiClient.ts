@@ -71,6 +71,38 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
   return response.json();
 }
 
+// Ticker -> backend Issuer.id, for the watchlist endpoints (see note above
+// the `watchlist` client below). Cached per page load and shared across
+// calls; cleared on a lookup miss so a ticker added to the backend after
+// the cache was built (e.g. a fresh ingestion run) still resolves on retry
+// instead of being stuck "not found" for the rest of the session.
+let issuerIdByTicker: Promise<Map<string, number>> | null = null;
+
+function loadIssuerIdMap(): Promise<Map<string, number>> {
+  return request<{ id: number; ticker: string }[]>('/issuers', { method: 'GET' }).then(
+    (issuers) => new Map(issuers.map((i) => [i.ticker.toUpperCase(), i.id]))
+  );
+}
+
+async function resolveIssuerId(symbolOrTicker: string): Promise<number> {
+  if (!issuerIdByTicker) {
+    issuerIdByTicker = loadIssuerIdMap();
+  }
+  let map = await issuerIdByTicker;
+  let id = map.get(symbolOrTicker.toUpperCase());
+  if (id === undefined) {
+    // Not in the cache — refresh once in case it's genuinely new, rather
+    // than failing on a stale snapshot.
+    issuerIdByTicker = loadIssuerIdMap();
+    map = await issuerIdByTicker;
+    id = map.get(symbolOrTicker.toUpperCase());
+  }
+  if (id === undefined) {
+    throw new Error(`"${symbolOrTicker}" isn't tracked as an issuer yet`);
+  }
+  return id;
+}
+
 /* ==========================================================================
    MARKETMAVEN API CLIENT SERVICE
    ========================================================================== */
@@ -81,7 +113,7 @@ export interface AuthResponse {
 }
 
 export interface WatchlistApiItem {
-  issuer_id: string;
+  issuer_id: number;
   ticker: string;
   name: string;
   exchange: string;
@@ -150,19 +182,27 @@ export const apiClient = {
   },
 
   // 2. WATCHLIST ENDPOINTS (My Portfolio)
+  //
+  // The rest of the app tracks watchlist entries by ticker symbol (e.g.
+  // "GTCO"), but the backend's watchlist table keys on the numeric
+  // Issuer.id — every call site here passes a symbol, so add/remove
+  // resolve it to an issuer_id first rather than pushing that translation
+  // out to every caller.
   watchlist: {
     get: async (): Promise<WatchlistApiItem[]> => {
       return request<WatchlistApiItem[]>('/watchlist', { method: 'GET' });
     },
 
-    add: async (issuer_id: string): Promise<WatchlistApiItem> => {
+    add: async (symbolOrTicker: string): Promise<WatchlistApiItem> => {
+      const issuer_id = await resolveIssuerId(symbolOrTicker);
       return request<WatchlistApiItem>('/watchlist', {
         method: 'POST',
         body: JSON.stringify({ issuer_id }),
       });
     },
 
-    remove: async (issuer_id: string): Promise<{ message: string }> => {
+    remove: async (symbolOrTicker: string): Promise<{ message: string }> => {
+      const issuer_id = await resolveIssuerId(symbolOrTicker);
       return request<{ message: string }>(`/watchlist/${encodeURIComponent(issuer_id)}`, {
         method: 'DELETE',
       });
@@ -315,8 +355,10 @@ export const apiClient = {
       return request<Record<string, string[]>>('/peer-mappings', { method: 'GET' });
     },
 
-    issuers: async (): Promise<{ issuer_id: string; ticker: string; name: string; exchange: string; sector: string }[]> => {
-      return request<{ issuer_id: string; ticker: string; name: string; exchange: string; sector: string }[]>('/issuers', { method: 'GET' });
+    // Field is `id`, not `issuer_id` — matches the backend's IssuerOut
+    // schema (`GET /issuers`), not the app-level IssuerItem shape.
+    issuers: async (): Promise<{ id: number; ticker: string; name: string; exchange: string; sector: string | null }[]> => {
+      return request<{ id: number; ticker: string; name: string; exchange: string; sector: string | null }[]>('/issuers', { method: 'GET' });
     },
 
     issuerPrices: async (id: string): Promise<StockData> => {

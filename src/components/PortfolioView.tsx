@@ -139,23 +139,17 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
       return;
     }
     if (selectedAddSymbol) {
+      // onToggleWatchlist (App.handleToggleWatchlist) already calls
+      // apiClient.watchlist.add/remove and handles the optimistic-update
+      // rollback on failure — calling it again here just fired the same
+      // request twice.
       onToggleWatchlist(selectedAddSymbol);
-      try {
-        await apiClient.watchlist.add(selectedAddSymbol);
-      } catch (err) {
-        // Fallback handled by local state
-      }
       setSelectedAddSymbol('');
     }
   };
 
-  const handleRemoveTicker = async (symbol: string) => {
+  const handleRemoveTicker = (symbol: string) => {
     onToggleWatchlist(symbol);
-    try {
-      await apiClient.watchlist.remove(symbol);
-    } catch (err) {
-      // Fallback handled by local state
-    }
   };
 
   if (!currentUser) {

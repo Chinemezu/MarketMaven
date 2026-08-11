@@ -121,7 +121,12 @@ export default function App() {
             apiClient.savedArticles.get().catch(() => null),
           ]).then(([watchlistItems, savedList]) => {
             if (watchlistItems && Array.isArray(watchlistItems)) {
-              setWatchlist(watchlistItems.map((item) => item.issuer_id || item.ticker));
+              // watchlist state is tracked by ticker symbol everywhere in
+              // this app (MOCK_STOCKS lookups, includes() checks) — issuer_id
+              // is a numeric FK the backend needs, not what the UI compares
+              // against, and being always-truthy it silently won over
+              // .ticker here.
+              setWatchlist(watchlistItems.map((item) => item.ticker));
             }
             if (savedList && Array.isArray(savedList)) {
               setSavedArticleIds(savedList.map((item) => item.id));
@@ -420,7 +425,12 @@ export default function App() {
                 apiClient.savedArticles.get().catch(() => null),
               ]).then(([watchlistItems, savedList]) => {
                 if (watchlistItems && Array.isArray(watchlistItems)) {
-                  setWatchlist(watchlistItems.map((item) => item.issuer_id || item.ticker));
+                  // watchlist state is tracked by ticker symbol everywhere in
+                  // this app (MOCK_STOCKS lookups, includes() checks) — issuer_id
+                  // is a numeric FK the backend needs, not what the UI compares
+                  // against, and being always-truthy it silently won over
+                  // .ticker here.
+                  setWatchlist(watchlistItems.map((item) => item.ticker));
                 }
                 if (savedList && Array.isArray(savedList)) {
                   setSavedArticleIds(savedList.map((item) => item.id));
@@ -820,7 +830,12 @@ export default function App() {
             apiClient.savedArticles.get().catch(() => null),
           ]).then(([watchlistItems, savedList]) => {
             if (watchlistItems && Array.isArray(watchlistItems)) {
-              setWatchlist(watchlistItems.map((item) => item.issuer_id || item.ticker));
+              // watchlist state is tracked by ticker symbol everywhere in
+              // this app (MOCK_STOCKS lookups, includes() checks) — issuer_id
+              // is a numeric FK the backend needs, not what the UI compares
+              // against, and being always-truthy it silently won over
+              // .ticker here.
+              setWatchlist(watchlistItems.map((item) => item.ticker));
             }
             if (savedList && Array.isArray(savedList)) {
               setSavedArticleIds(savedList.map((item) => item.id));
