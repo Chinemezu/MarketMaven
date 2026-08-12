@@ -3,7 +3,13 @@ export interface Article {
   title: string;
   excerpt: string;
   content: string;
-  category: 'Emerging Markets' | 'Markets' | 'FX & Currencies' | 'Macroeconomics' | 'Tech & Innovation';
+  // Real articles are aggregated from RSS feeds, not authored here — there's
+  // no fixed taxonomy on the backend, just whatever vertical the source feed
+  // is tagged with (finance, crypto, forex, bonds, etfs, commodities,
+  // technology, real_estate, energy...), so this is a display label derived
+  // from that, not a closed set.
+  category: string;
+  url?: string; // link to the original source — the real article body lives there, not in `content`
   keywords: string[];
   source: string; // e.g., "Nairametrics", "Reuters Markets", "Bloomberg News", "Financial Times", "TechCabal", "BusinessDay"
   sourceLogo?: string;

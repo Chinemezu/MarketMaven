@@ -4,6 +4,10 @@
 import { Article, TopSource, StockData, User, ReportItem, EditorsPickItem } from '../types';
 import { INITIAL_ARTICLES, INITIAL_TOP_SOURCES } from '../data/mockArticles';
 import { MOCK_STOCKS } from '../data/mockStocks';
+import {
+  InsightApiItem, ReportApiItem, EditorsPickApiItem, SourceRankApiItem, UserApiItem,
+  adaptInsightList, adaptReport, adaptReportList, adaptEditorsPickList, adaptTopSourceList, adaptUser,
+} from './adapters';
 
 export const TOKEN_STORAGE_KEY = 'marketmaven_token';
 
@@ -112,6 +116,11 @@ export interface AuthResponse {
   user: User;
 }
 
+interface AuthApiResponse {
+  access_token: string;
+  user: UserApiItem;
+}
+
 export interface WatchlistApiItem {
   issuer_id: number;
   ticker: string;
@@ -134,30 +143,34 @@ export interface NewsletterSignupResult {
 export const apiClient = {
   // 1. AUTH ENDPOINTS
   auth: {
+    // `name` isn't a real field on the backend's register payload (there's
+    // no display-name column on User at all — see adaptUser) — dropped
+    // before sending so it doesn't look like it's being persisted.
     register: async (payload: { email: string; password: string; name?: string }): Promise<AuthResponse> => {
-      const data = await request<AuthResponse>('/auth/register', {
+      const data = await request<AuthApiResponse>('/auth/register', {
         method: 'POST',
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ email: payload.email, password: payload.password }),
       });
       if (data.access_token) {
         setStoredToken(data.access_token);
       }
-      return data;
+      return { access_token: data.access_token, user: adaptUser(data.user) };
     },
 
     login: async (payload: { email: string; password: string }): Promise<AuthResponse> => {
-      const data = await request<AuthResponse>('/auth/login', {
+      const data = await request<AuthApiResponse>('/auth/login', {
         method: 'POST',
         body: JSON.stringify(payload),
       });
       if (data.access_token) {
         setStoredToken(data.access_token);
       }
-      return data;
+      return { access_token: data.access_token, user: adaptUser(data.user) };
     },
 
     me: async (): Promise<User> => {
-      return request<User>('/auth/me', { method: 'GET' });
+      const data = await request<UserApiItem>('/auth/me', { method: 'GET' });
+      return adaptUser(data);
     },
 
     verifyEmail: async (token: string): Promise<{ message: string }> => {
@@ -211,8 +224,11 @@ export const apiClient = {
 
   // 3. SAVED ARTICLES ENDPOINTS
   savedArticles: {
+    // Same shape as InsightOut plus saved_at (no relevance_score/featured)
+    // — reuses adaptInsightList rather than a separate mapper.
     get: async (): Promise<(Article & { saved_at?: string })[]> => {
-      return request<(Article & { saved_at?: string })[]>('/saved-articles', { method: 'GET' });
+      const data = await request<InsightApiItem[]>('/saved-articles', { method: 'GET' });
+      return adaptInsightList(data).map((article, i) => ({ ...article, saved_at: data[i].saved_at }));
     },
 
     add: async (insight_id: string): Promise<{ message: string }> => {
@@ -230,36 +246,32 @@ export const apiClient = {
 
   // 4. INSIGHTS & CONTENT ENDPOINTS
   insights: {
+    // vertical/sort/limit are the only filters GET /insights actually
+    // supports — category/search/exclude_ids/featured/featured_order were
+    // being sent but silently ignored server-side (FastAPI drops unknown
+    // query params rather than erroring), so those "filters" never did
+    // anything. Filtering by source/keyword happens client-side in App.tsx
+    // instead.
     get: async (params: {
       vertical?: string;
       sort?: 'relevance' | 'recent';
       limit?: number;
-      featured?: boolean;
-      featured_order?: number;
-      category?: string;
-      search?: string;
-      exclude_ids?: string[];
     } = {}): Promise<Article[]> => {
       const urlParams = new URLSearchParams();
       if (params.vertical) urlParams.set('vertical', params.vertical);
       if (params.sort) urlParams.set('sort', params.sort);
       if (params.limit) urlParams.set('limit', params.limit.toString());
-      if (params.featured !== undefined) urlParams.set('featured', params.featured.toString());
-      if (params.featured_order !== undefined) urlParams.set('featured_order', params.featured_order.toString());
-      if (params.category) urlParams.set('category', params.category);
-      if (params.search) urlParams.set('search', params.search);
-      if (params.exclude_ids && params.exclude_ids.length > 0) {
-        urlParams.set('exclude_ids', params.exclude_ids.join(','));
-      }
 
       const queryString = urlParams.toString();
       const endpoint = `/insights${queryString ? `?${queryString}` : ''}`;
-      return request<Article[]>(endpoint, { method: 'GET' });
+      const data = await request<InsightApiItem[]>(endpoint, { method: 'GET' });
+      return adaptInsightList(data);
     },
 
     topSources: async (vertical?: string): Promise<TopSource[]> => {
       const endpoint = `/insights/top-sources${vertical ? `?vertical=${encodeURIComponent(vertical)}` : ''}`;
-      return request<TopSource[]>(endpoint, { method: 'GET' });
+      const data = await request<SourceRankApiItem[]>(endpoint, { method: 'GET' });
+      return adaptTopSourceList(data);
     },
   },
 
@@ -267,7 +279,8 @@ export const apiClient = {
   editorsPicks: {
     get: async (limit?: number): Promise<EditorsPickItem[]> => {
       const endpoint = `/editors-picks${limit ? `?limit=${limit}` : ''}`;
-      return request<EditorsPickItem[]>(endpoint, { method: 'GET' });
+      const data = await request<EditorsPickApiItem[]>(endpoint, { method: 'GET' });
+      return adaptEditorsPickList(data);
     },
   },
 
@@ -277,11 +290,13 @@ export const apiClient = {
       if (params.vertical) urlParams.set('vertical', params.vertical);
       if (params.limit) urlParams.set('limit', params.limit.toString());
       const query = urlParams.toString();
-      return request<ReportItem[]>(`/reports${query ? `?${query}` : ''}`, { method: 'GET' });
+      const data = await request<ReportApiItem[]>(`/reports${query ? `?${query}` : ''}`, { method: 'GET' });
+      return adaptReportList(data);
     },
 
     getBySlug: async (slug: string): Promise<ReportItem> => {
-      return request<ReportItem>(`/reports/${encodeURIComponent(slug)}`, { method: 'GET' });
+      const data = await request<ReportApiItem>(`/reports/${encodeURIComponent(slug)}`, { method: 'GET' });
+      return adaptReport(data);
     },
   },
 
@@ -289,7 +304,8 @@ export const apiClient = {
   admin: {
     reports: {
       getAll: async (): Promise<ReportItem[]> => {
-        return request<ReportItem[]>('/admin/reports', { method: 'GET' });
+        const data = await request<ReportApiItem[]>('/admin/reports', { method: 'GET' });
+        return adaptReportList(data);
       },
 
       create: async (payload: {
@@ -302,10 +318,11 @@ export const apiClient = {
         featured?: boolean;
         featured_order?: number;
       }): Promise<ReportItem> => {
-        return request<ReportItem>('/admin/reports', {
+        const data = await request<ReportApiItem>('/admin/reports', {
           method: 'POST',
           body: JSON.stringify(payload),
         });
+        return adaptReport(data);
       },
 
       update: async (
@@ -321,10 +338,11 @@ export const apiClient = {
           featured_order: number;
         }>
       ): Promise<ReportItem> => {
-        return request<ReportItem>(`/admin/reports/${encodeURIComponent(id)}`, {
+        const data = await request<ReportApiItem>(`/admin/reports/${encodeURIComponent(id)}`, {
           method: 'PATCH',
           body: JSON.stringify(payload),
         });
+        return adaptReport(data);
       },
 
       delete: async (id: string): Promise<{ message: string }> => {

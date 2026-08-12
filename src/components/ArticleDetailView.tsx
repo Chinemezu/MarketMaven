@@ -172,15 +172,32 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
           </p>
         </div>
 
-        {/* Full Article Content */}
+        {/* Full Article Content — real aggregated articles only carry a
+            summary (mirrored into `content`), not a full body, so this
+            skips repeating it and leads with the external link instead.
+            Mock/fallback data still has a genuinely distinct `content`. */}
         <div className="bg-white rounded-2xl p-6 sm:p-10 border border-[#E3E8F1] shadow-xs space-y-6">
-          <div className="prose prose-slate max-w-none text-base sm:text-lg leading-relaxed text-[#14181F] space-y-6 font-normal">
-            {article.content.split('\n\n').map((paragraph, idx) => (
-              <p key={idx} className="text-[#14181F] leading-relaxed">
-                {paragraph}
-              </p>
-            ))}
-          </div>
+          {article.content && article.content !== article.excerpt && (
+            <div className="prose prose-slate max-w-none text-base sm:text-lg leading-relaxed text-[#14181F] space-y-6 font-normal">
+              {article.content.split('\n\n').map((paragraph, idx) => (
+                <p key={idx} className="text-[#14181F] leading-relaxed">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+          )}
+
+          {article.url && (
+            <a
+              href={article.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-[#22C55E] hover:text-[#1a9c48] transition-colors"
+            >
+              Read the full story at {article.source}
+              <ExternalLink className="w-4 h-4" />
+            </a>
+          )}
 
           {/* Keywords / Tags */}
           {article.keywords && article.keywords.length > 0 && (

@@ -138,12 +138,29 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
             {article.excerpt}
           </p>
 
-          {/* Body Text */}
-          <div className="prose prose-slate max-w-none text-sm sm:text-base leading-relaxed text-[#14181F] space-y-4">
-            {article.content.split('\n\n').map((paragraph, idx) => (
-              <p key={idx}>{paragraph}</p>
-            ))}
-          </div>
+          {/* Body Text — real aggregated articles only carry a summary (mirrored
+              into `content`), not a full body, so skip repeating it and lead
+              with the external link instead. Mock/fallback data still has a
+              genuinely distinct `content` and renders normally. */}
+          {article.content && article.content !== article.excerpt && (
+            <div className="prose prose-slate max-w-none text-sm sm:text-base leading-relaxed text-[#14181F] space-y-4">
+              {article.content.split('\n\n').map((paragraph, idx) => (
+                <p key={idx}>{paragraph}</p>
+              ))}
+            </div>
+          )}
+
+          {article.url && (
+            <a
+              href={article.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-[#22C55E] hover:text-[#1a9c48] transition-colors"
+            >
+              Read the full story at {article.source}
+              <ExternalLink className="w-4 h-4" />
+            </a>
+          )}
 
           {/* Keywords */}
           {article.keywords && article.keywords.length > 0 && (
