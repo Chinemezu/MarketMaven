@@ -17,6 +17,7 @@ export interface InsightApiItem {
   url: string;
   published_date: string | null;
   summary: string | null;
+  image_url?: string | null;
   relevance_score?: number;
   featured?: boolean;
   saved_at?: string;
@@ -136,7 +137,10 @@ export function adaptInsight(raw: InsightApiItem, featuredOrder?: number): Artic
     publishedAt: raw.published_date || '',
     relativeTime: formatRelativeTime(raw.published_date),
     readTime: estimateReadTime(summary),
-    imageUrl: placeholderImage(raw.vertical),
+    // Real image when the source feed actually provided one (only some
+    // do — see extract_image_url() backend-side); the generic placeholder
+    // otherwise, never a fabricated stock photo.
+    imageUrl: raw.image_url || placeholderImage(raw.vertical),
     featured: raw.featured ?? false,
     featuredOrder,
     relevanceScore: raw.relevance_score ?? 0,
