@@ -155,10 +155,10 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
               href={article.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-[#22C55E] hover:text-[#1a9c48] transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs text-[#5A6478] hover:text-[#14181F] transition-colors"
             >
-              Read the full story at {article.source}
-              <ExternalLink className="w-4 h-4" />
+              Source: {article.source}
+              <ExternalLink className="w-3 h-3" />
             </a>
           )}
 
