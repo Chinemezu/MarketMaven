@@ -6,7 +6,7 @@ import { INITIAL_ARTICLES, INITIAL_TOP_SOURCES } from '../data/mockArticles';
 import { MOCK_STOCKS } from '../data/mockStocks';
 import {
   InsightApiItem, ReportApiItem, EditorsPickApiItem, SourceRankApiItem, UserApiItem,
-  adaptInsightList, adaptReport, adaptReportList, adaptEditorsPickList, adaptTopSourceList, adaptUser,
+  adaptInsight, adaptInsightList, adaptReport, adaptReportList, adaptEditorsPickList, adaptTopSourceList, adaptUser,
 } from './adapters';
 
 export const TOKEN_STORAGE_KEY = 'marketmaven_token';
@@ -272,6 +272,14 @@ export const apiClient = {
       const endpoint = `/insights/top-sources${vertical ? `?vertical=${encodeURIComponent(vertical)}` : ''}`;
       const data = await request<SourceRankApiItem[]>(endpoint, { method: 'GET' });
       return adaptTopSourceList(data);
+    },
+
+    // Single-article lookup — needed to resolve a direct/shared article
+    // link, since the article may no longer be in the default list's top N
+    // results by the time someone opens the link.
+    getById: async (id: string): Promise<Article> => {
+      const data = await request<InsightApiItem>(`/insights/${encodeURIComponent(id)}`, { method: 'GET' });
+      return adaptInsight(data);
     },
   },
 

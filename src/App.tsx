@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Article, NavItem, StockData, TopSource, User } from './types';
 import { fetchInsights, fetchTopSources } from './services/api';
 import { apiClient, getStoredToken, clearStoredToken, onUnauthorized } from './services/apiClient';
+import { resolveRoute } from './services/router';
 import { MOCK_STOCKS } from './data/mockStocks';
 
 // Header and Shell
@@ -179,22 +180,53 @@ export default function App() {
   }, []);
 
   // Handlers for navigation & state
-  const handleNavigate = (item: NavItem) => {
+  //
+  // This is the single choke point essentially every navigation in the app
+  // already goes through (nav clicks, article/report opens, footer links).
+  // Syncing the real URL here — rather than in each of those call sites —
+  // is what makes every one of them bookmarkable/shareable/refreshable in
+  // one place. `skipPush` exists for the popstate handler below: when the
+  // back/forward button already changed the URL, re-pushing here would
+  // break the browser history stack instead of following it.
+  const handleNavigate = (item: NavItem, options?: { skipPush?: boolean }) => {
     if ((item.id === 'portfolio' || item.path === '/portfolio') && !currentUser) {
-      setCurrentNavItem({
-        id: 'login',
-        label: 'Log In',
-        path: '/login',
-        template: 'login',
-      });
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      handleNavigate({ id: 'login', label: 'Log In', path: '/login', template: 'login' });
       return;
     }
     setCurrentNavItem(item);
     setActiveSourceFilter(null);
     setActiveTagFilter(null);
+    if (!options?.skipPush && window.location.pathname !== item.path) {
+      window.history.pushState(null, '', item.path);
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  // Resolve the real URL into app state on first load (deep link / direct
+  // visit / refresh) and on browser back-forward navigation. Both paths
+  // share resolveRoute() so a URL always resolves to the same state
+  // whether the app is booting into it or navigating back to it.
+  useEffect(() => {
+    const pathname = window.location.pathname;
+    if (pathname === '/' || pathname === '') return; // already the default state
+    resolveRoute(pathname).then(({ navItem, selectedArticle: art, selectedReportSlug: slug }) => {
+      if (art) setSelectedArticle(art);
+      if (slug) setSelectedReportSlug(slug);
+      handleNavigate(navItem, { skipPush: true });
+    });
+  }, []);
+
+  useEffect(() => {
+    const onPopState = () => {
+      resolveRoute(window.location.pathname).then(({ navItem, selectedArticle: art, selectedReportSlug: slug }) => {
+        setSelectedArticle(art ?? null);
+        setSelectedReportSlug(slug ?? null);
+        handleNavigate(navItem, { skipPush: true });
+      });
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
 
   const handleToggleWatchlist = async (symbol: string) => {
     if (!currentUser) {
@@ -405,17 +437,13 @@ export default function App() {
       case 'register':
       case 'forgot-password':
       case 'reset-password':
+      case 'verify-email':
         return (
           <AuthPagesView
             mode={currentNavItem.template}
             promptMessage={authPromptMessage}
             onNavigate={(path, mode) => {
-              setCurrentNavItem({
-                id: mode,
-                label: mode.replace('-', ' ').toUpperCase(),
-                path,
-                template: mode,
-              });
+              handleNavigate({ id: mode, label: mode.replace('-', ' ').toUpperCase(), path, template: mode });
             }}
             onAuthSuccess={(user) => {
               setCurrentUser(user);

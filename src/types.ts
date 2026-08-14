@@ -85,7 +85,7 @@ export interface TopSource {
   avatarBg?: string;
 }
 
-export type PageTemplateType = 'home' | 'template-a' | 'template-b' | 'template-c' | 'A' | 'B' | 'C' | 'screener' | 'converter' | 'chart' | 'advanced-charts' | 'education' | 'portfolio' | 'saved' | 'login' | 'register' | 'forgot-password' | 'reset-password' | 'reports' | 'report-detail' | 'article-detail' | 'article_detail' | 'admin-reports' | 'about' | 'terms' | 'privacy' | 'disclaimer' | 'cookies' | 'contact';
+export type PageTemplateType = 'home' | 'template-a' | 'template-b' | 'template-c' | 'A' | 'B' | 'C' | 'screener' | 'converter' | 'chart' | 'advanced-charts' | 'education' | 'portfolio' | 'saved' | 'login' | 'register' | 'forgot-password' | 'reset-password' | 'verify-email' | 'reports' | 'report-detail' | 'article-detail' | 'article_detail' | 'admin-reports' | 'about' | 'terms' | 'privacy' | 'disclaimer' | 'cookies' | 'contact';
 
 export interface IssuerItem {
   issuer_id: string;

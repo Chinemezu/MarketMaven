@@ -4,8 +4,8 @@ import { User } from '../types';
 import { Mail, Lock, User as UserIcon, ArrowRight, ShieldCheck, CheckCircle2, KeyRound, AlertCircle, ArrowLeft } from 'lucide-react';
 
 interface AuthPagesViewProps {
-  mode: 'login' | 'register' | 'forgot-password' | 'reset-password';
-  onNavigate: (path: string, mode: 'login' | 'register' | 'forgot-password' | 'reset-password') => void;
+  mode: 'login' | 'register' | 'forgot-password' | 'reset-password' | 'verify-email';
+  onNavigate: (path: string, mode: 'login' | 'register' | 'forgot-password' | 'reset-password' | 'verify-email') => void;
   onAuthSuccess: (user: User) => void;
   promptMessage?: string;
 }
@@ -24,16 +24,38 @@ export const AuthPagesView: React.FC<AuthPagesViewProps> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [verifying, setVerifying] = useState(false);
 
-  // Extract token from URL query string on reset-password page load
+  // Extract token from URL query string on reset-password page load. No
+  // fallback token here on purpose -- a made-up placeholder just meant
+  // "reset password" would silently fail against the real backend anyway
+  // (invalid token), so an empty field that visibly needs a real token is
+  // more honest than one that looks pre-filled and correct.
   useEffect(() => {
     if (mode === 'reset-password') {
       const urlParams = new URLSearchParams(window.location.search);
-      const tokenFromUrl = urlParams.get('token') || 'demo_reset_token_123';
-      setResetToken(tokenFromUrl);
+      setResetToken(urlParams.get('token') || '');
     }
     setError(null);
     setSuccessMessage(null);
+  }, [mode]);
+
+  // verify-email has no form -- the link itself carries the token, so
+  // verification happens automatically on load, same as clicking a
+  // traditional server-rendered verification link would.
+  useEffect(() => {
+    if (mode !== 'verify-email') return;
+    const token = new URLSearchParams(window.location.search).get('token');
+    if (!token) {
+      setError('This verification link is missing its token.');
+      return;
+    }
+    setVerifying(true);
+    apiClient.auth
+      .verifyEmail(token)
+      .then((res) => setSuccessMessage(res.message))
+      .catch((err: any) => setError(err.message || 'This verification link is invalid or has expired.'))
+      .finally(() => setVerifying(false));
   }, [mode]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -85,6 +107,7 @@ export const AuthPagesView: React.FC<AuthPagesViewProps> = ({
               {mode === 'register' && 'Create Your Account'}
               {mode === 'forgot-password' && 'Reset Your Password'}
               {mode === 'reset-password' && 'Set New Password'}
+              {mode === 'verify-email' && 'Verify Your Email'}
             </h1>
 
             {promptMessage ? (
@@ -97,6 +120,8 @@ export const AuthPagesView: React.FC<AuthPagesViewProps> = ({
                 {mode === 'register' && 'Join MarketMaven to personalize your financial intelligence wire.'}
                 {mode === 'forgot-password' && 'Enter your email to receive password reset instructions.'}
                 {mode === 'reset-password' && 'Enter your new password below.'}
+                {mode === 'verify-email' && verifying && 'Confirming your account...'}
+                {mode === 'verify-email' && !verifying && (successMessage || error) && ' '}
               </p>
             )}
           </div>
@@ -141,7 +166,9 @@ export const AuthPagesView: React.FC<AuthPagesViewProps> = ({
             </div>
           )}
 
-          {/* Form */}
+          {/* Form -- verify-email has nothing for the user to submit, the
+              token in the link does all the work via the effect above */}
+          {mode !== 'verify-email' && (
           <form onSubmit={handleSubmit} className="space-y-4">
             {mode === 'register' && (
               <div>
@@ -259,10 +286,11 @@ export const AuthPagesView: React.FC<AuthPagesViewProps> = ({
               )}
             </button>
           </form>
+          )}
 
           {/* Footer Back Links */}
           <div className="pt-2 text-center text-xs text-slate-400 border-t border-white/10 flex items-center justify-center gap-4">
-            {mode === 'forgot-password' || mode === 'reset-password' ? (
+            {mode === 'forgot-password' || mode === 'reset-password' || mode === 'verify-email' ? (
               <button
                 type="button"
                 onClick={() => onNavigate('/login', 'login')}
