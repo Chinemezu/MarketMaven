@@ -137,6 +137,11 @@ export interface StockData {
   low52: number;
   sparkline: number[];
   ohlc: { date: string; open: number; high: number; low: number; close: number; volume: number }[];
+  // Undefined/true = the numeric fields above are real. False = this is a
+  // real backend issuer with no price history yet (e.g. most NGX tickers --
+  // the scraper doesn't cover them yet), so price/change/52w/sparkline are
+  // placeholders and should render as an honest "pending" state, not numbers.
+  hasPriceData?: boolean;
 }
 
 export interface WatchlistItem {

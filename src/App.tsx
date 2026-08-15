@@ -77,8 +77,13 @@ export default function App() {
 
   const [watchlist, setWatchlist] = useState<string[]>(() => {
     const saved = localStorage.getItem('mm_watchlist');
-    return saved ? JSON.parse(saved) : ['DANGCEM', 'GTCO', 'NVDA', 'NGX-ASI'];
+    return saved ? JSON.parse(saved) : [];
   });
+  // Surfaced in PortfolioView as an inline banner -- see handleToggleWatchlist's
+  // catch block. Previously the failure was only console.error'd and silently
+  // rolled back, so a phantom/unrecognized ticker's Follow button just did
+  // nothing visible.
+  const [watchlistError, setWatchlistError] = useState<string | null>(null);
 
   const [savedArticleIds, setSavedArticleIds] = useState<string[]>(() => {
     const saved = localStorage.getItem('mm_saved_articles');
@@ -270,6 +275,7 @@ export default function App() {
     setWatchlist((prev) =>
       isCurrentlyAdded ? prev.filter((s) => s !== symbol) : [...prev, symbol]
     );
+    setWatchlistError(null);
 
     try {
       if (isCurrentlyAdded) {
@@ -283,6 +289,7 @@ export default function App() {
       setWatchlist((prev) =>
         isCurrentlyAdded ? [...prev, symbol] : prev.filter((s) => s !== symbol)
       );
+      setWatchlistError(err instanceof Error ? err.message : 'Failed to update watchlist.');
     }
   };
 
@@ -582,6 +589,8 @@ export default function App() {
             onToggleWatchlist={handleToggleWatchlist}
             onOpenAuthPrompt={() => handleOpenAuthPrompt('login', 'Sign in to manage portfolio watchlists')}
             onSelectStockChart={handleSelectStockChart}
+            watchlistError={watchlistError}
+            onDismissWatchlistError={() => setWatchlistError(null)}
           />
         );
 

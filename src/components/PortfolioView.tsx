@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { MOCK_STOCKS } from '../data/mockStocks';
 import { StockData, User } from '../types';
 import { apiClient, WatchlistApiItem } from '../services/apiClient';
 import {
@@ -14,7 +13,35 @@ import {
   Activity,
   Layers,
   RefreshCw,
+  AlertCircle,
 } from 'lucide-react';
+
+type RealIssuer = { id: number; ticker: string; name: string; exchange: string; sector: string | null };
+
+// Well-known NGX names to prefer for the Benchmark Instruments row, in
+// preference order -- falls back to whatever else is in the real issuer
+// list if fewer than 5 of these actually exist there.
+const PREFERRED_BENCHMARK_TICKERS = ['GTCO', 'ZENITHBANK', 'MTNN', 'SEPLAT', 'UBA', 'DANGSUGAR', 'ACCESSCORP'];
+
+function issuerToStockData(issuer: RealIssuer): StockData {
+  return {
+    symbol: issuer.ticker,
+    name: issuer.name,
+    exchange: (issuer.exchange as StockData['exchange']) || 'NGX',
+    sector: (issuer.sector as StockData['sector']) || 'Financial Services',
+    price: 0,
+    change: 0,
+    changePercent: 0,
+    volume: '—',
+    marketCap: '—',
+    peRatio: 0,
+    high52: 0,
+    low52: 0,
+    sparkline: [],
+    ohlc: [],
+    hasPriceData: false,
+  };
+}
 
 interface PortfolioViewProps {
   currentUser: User | null;
@@ -22,6 +49,8 @@ interface PortfolioViewProps {
   onToggleWatchlist: (symbol: string) => void;
   onOpenAuthPrompt: () => void;
   onSelectStockChart: (stock: StockData) => void;
+  watchlistError: string | null;
+  onDismissWatchlistError: () => void;
 }
 
 export const PortfolioView: React.FC<PortfolioViewProps> = ({
@@ -30,11 +59,28 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
   onToggleWatchlist,
   onOpenAuthPrompt,
   onSelectStockChart,
+  watchlistError,
+  onDismissWatchlistError,
 }) => {
   const [selectedAddSymbol, setSelectedAddSymbol] = useState<string>('');
   const [searchFilter, setSearchFilter] = useState<string>('');
   const [remoteWatchlist, setRemoteWatchlist] = useState<WatchlistApiItem[]>([]);
   const [loadingWatchlist, setLoadingWatchlist] = useState<boolean>(false);
+  const [realIssuers, setRealIssuers] = useState<RealIssuer[]>([]);
+
+  // Real issuers the backend actually knows about -- replaces the old
+  // MOCK_STOCKS fixture, which included tickers (DANGCEM, NVDA, AAPL...)
+  // that don't exist as backend Issuer rows, so "Follow" on them always
+  // failed against POST /watchlist.
+  useEffect(() => {
+    apiClient.market
+      .issuers()
+      .then(setRealIssuers)
+      .catch(() => {
+        // Leave realIssuers empty -- Benchmark Instruments / Add-ticker
+        // dropdown just show nothing rather than fabricated fallback rows.
+      });
+  }, []);
 
   // Major Indices data (S&P 500, Nasdaq, Dow — real; NGX ASI — placeholder with dashed underline)
   const majorIndices = [
@@ -94,37 +140,62 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
     }
   }, [currentUser, watchlist]);
 
-  // Merge MOCK_STOCKS with remote watchlist and local watchlist prop
+  // Merge real backend issuers with remote watchlist and local watchlist prop
   const combinedSymbols = Array.from(
     new Set([...watchlist, ...remoteWatchlist.map((r) => r.ticker)])
   );
 
   const watchlistedStocks: StockData[] = combinedSymbols.map((sym) => {
-    const mock = MOCK_STOCKS.find((s) => s.symbol.toUpperCase() === sym.toUpperCase());
-    if (mock) return mock;
-
+    const issuer = realIssuers.find((i) => i.ticker.toUpperCase() === sym.toUpperCase());
     const remote = remoteWatchlist.find((r) => r.ticker.toUpperCase() === sym.toUpperCase());
+
+    if (issuer) {
+      // remote (from GET /watchlist) may carry real quote fields once the
+      // backend starts returning them for this issuer -- prefer those over
+      // the honest-placeholder defaults when present.
+      return {
+        ...issuerToStockData(issuer),
+        price: remote?.price ?? 0,
+        change: remote?.change ?? 0,
+        changePercent: remote?.changePercent ?? 0,
+        sparkline: remote?.sparkline ?? [],
+        hasPriceData: remote?.price != null,
+      };
+    }
+
+    // Not a recognized backend issuer at all (shouldn't normally happen --
+    // POST /watchlist would have rejected it -- but a stale localStorage
+    // entry from before this fix could still be sitting there).
     return {
       symbol: sym,
       name: remote?.name || `${sym} Equity`,
       exchange: (remote?.exchange as any) || 'NGX',
       sector: 'Financial Services',
-      price: remote?.price || 150.0,
-      change: remote?.change || 2.5,
-      changePercent: remote?.changePercent || 1.67,
-      volume: '1.2M',
-      marketCap: '₦250B',
-      peRatio: 12.4,
-      high52: 180.0,
-      low52: 120.0,
-      sparkline: remote?.sparkline || [145, 147, 146, 148, 150],
+      price: 0,
+      change: 0,
+      changePercent: 0,
+      volume: '—',
+      marketCap: '—',
+      peRatio: 0,
+      high52: 0,
+      low52: 0,
+      sparkline: [],
       ohlc: [],
+      hasPriceData: false,
     };
   });
 
-  const availableToAdd = MOCK_STOCKS.filter(
-    (s) => !combinedSymbols.includes(s.symbol)
+  const availableToAdd = realIssuers.filter(
+    (i) => !combinedSymbols.includes(i.ticker)
   );
+
+  const benchmarkInstruments: StockData[] = (() => {
+    const preferred = PREFERRED_BENCHMARK_TICKERS
+      .map((t) => realIssuers.find((i) => i.ticker === t))
+      .filter((i): i is RealIssuer => !!i);
+    const rest = realIssuers.filter((i) => !preferred.includes(i));
+    return [...preferred, ...rest].slice(0, 5).map(issuerToStockData);
+  })();
 
   const filteredWatchlist = watchlistedStocks.filter(
     (s) =>
@@ -254,8 +325,24 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
             <span className="text-xs font-bold uppercase tracking-wider text-[#14181F] flex items-center gap-2">
               <Layers className="w-4 h-4 text-[#22C55E]" /> Benchmark Instruments
             </span>
-            <span className="text-[11px] font-mono text-[#5A6478]">REAL-TIME REFRESH</span>
+            <span className="text-[11px] font-mono text-[#5A6478]">
+              {benchmarkInstruments.some((s) => s.hasPriceData) ? 'LIVE WHERE AVAILABLE' : 'PRICE DATA PENDING'}
+            </span>
           </div>
+
+          {watchlistError && (
+            <div className="mx-4 mt-4 flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
+              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+              <div className="flex-1 font-medium">{watchlistError}</div>
+              <button
+                onClick={onDismissWatchlistError}
+                className="text-red-400 hover:text-red-600 cursor-pointer"
+                aria-label="Dismiss"
+              >
+                ✕
+              </button>
+            </div>
+          )}
 
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
@@ -270,55 +357,71 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#E3E8F1] text-xs font-mono">
-                {MOCK_STOCKS.slice(0, 5).map((stock) => {
-                  const isPos = stock.change >= 0;
-                  const isFollowing = combinedSymbols.includes(stock.symbol);
+                {benchmarkInstruments.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="py-6 px-4 text-center text-[#5A6478]">
+                      Loading instruments…
+                    </td>
+                  </tr>
+                ) : (
+                  benchmarkInstruments.map((stock) => {
+                    const isPos = stock.change >= 0;
+                    const isFollowing = combinedSymbols.includes(stock.symbol);
+                    const currency = stock.exchange === 'NGX' ? '₦' : '$';
 
-                  return (
-                    <tr key={stock.symbol} className="hover:bg-slate-50 transition-colors">
-                      <td className="py-3 px-4">
-                        <span className="font-bold text-[#14181F]">{stock.symbol}</span>
-                        <span className="text-[10px] text-[#5A6478] block font-serif">
-                          {stock.name}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4 text-[#5A6478]">{stock.exchange}</td>
-                      <td className="py-3 px-4 text-right font-bold text-[#14181F]">
-                        {stock.exchange === 'NGX' ? '₦' : '$'}
-                        {stock.price.toFixed(2)}
-                      </td>
-                      <td
-                        className={`py-3 px-4 text-right font-bold ${
-                          isPos ? 'text-[#00C48C]' : 'text-[#FF4D4F]'
-                        }`}
-                      >
-                        {isPos ? '+' : ''}
-                        {stock.changePercent.toFixed(2)}%
-                      </td>
-                      <td className="py-3 px-4 text-right text-[#5A6478]">
-                        {stock.exchange === 'NGX' ? '₦' : '$'}
-                        {stock.high52.toFixed(2)}
-                      </td>
-                      <td className="py-3 px-4 text-right">
-                        <button
-                          onClick={() => {
-                            if (!isFollowing) {
-                              onToggleWatchlist(stock.symbol);
-                              apiClient.watchlist.add(stock.symbol).catch(() => {});
-                            }
-                          }}
-                          className={`px-2.5 py-1 rounded text-[11px] font-sans font-semibold transition-all cursor-pointer ${
-                            isFollowing
-                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                              : 'bg-[#22C55E] text-white hover:bg-[#16A34A]'
-                          }`}
-                        >
-                          {isFollowing ? '✓ Following' : '+ Follow'}
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
+                    return (
+                      <tr key={stock.symbol} className="hover:bg-slate-50 transition-colors">
+                        <td className="py-3 px-4">
+                          <span className="font-bold text-[#14181F]">{stock.symbol}</span>
+                          <span className="text-[10px] text-[#5A6478] block font-serif">
+                            {stock.name}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4 text-[#5A6478]">{stock.exchange}</td>
+                        {stock.hasPriceData ? (
+                          <>
+                            <td className="py-3 px-4 text-right font-bold text-[#14181F]">
+                              {currency}
+                              {stock.price.toFixed(2)}
+                            </td>
+                            <td
+                              className={`py-3 px-4 text-right font-bold ${
+                                isPos ? 'text-[#00C48C]' : 'text-[#FF4D4F]'
+                              }`}
+                            >
+                              {isPos ? '+' : ''}
+                              {stock.changePercent.toFixed(2)}%
+                            </td>
+                            <td className="py-3 px-4 text-right text-[#5A6478]">
+                              {currency}
+                              {stock.high52.toFixed(2)}
+                            </td>
+                          </>
+                        ) : (
+                          <td colSpan={3} className="py-3 px-4 text-right text-[#5A6478]">
+                            <span className="border-b border-dashed border-slate-400 pb-[1px]">
+                              Price data pending
+                            </span>
+                          </td>
+                        )}
+                        <td className="py-3 px-4 text-right">
+                          <button
+                            onClick={() => {
+                              if (!isFollowing) onToggleWatchlist(stock.symbol);
+                            }}
+                            className={`px-2.5 py-1 rounded text-[11px] font-sans font-semibold transition-all cursor-pointer ${
+                              isFollowing
+                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                : 'bg-[#22C55E] text-white hover:bg-[#16A34A]'
+                            }`}
+                          >
+                            {isFollowing ? '✓ Following' : '+ Follow'}
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
               </tbody>
             </table>
           </div>
@@ -349,8 +452,8 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
             >
               <option value="">+ Add ticker to watchlist...</option>
               {availableToAdd.map((s) => (
-                <option key={s.symbol} value={s.symbol}>
-                  {s.symbol} — {s.name} ({s.exchange})
+                <option key={s.id} value={s.ticker}>
+                  {s.ticker} — {s.name} ({s.exchange})
                 </option>
               ))}
             </select>
@@ -440,56 +543,66 @@ export const PortfolioView: React.FC<PortfolioViewProps> = ({
                         <span className="text-[10px] font-mono text-[#5A6478] block uppercase">
                           Last Price
                         </span>
-                        <span className="text-2xl font-mono font-bold text-[#14181F]">
-                          {stock.exchange === 'NGX' ? '₦' : '$'}
-                          {stock.price.toFixed(2)}
-                        </span>
+                        {stock.hasPriceData ? (
+                          <span className="text-2xl font-mono font-bold text-[#14181F]">
+                            {stock.exchange === 'NGX' ? '₦' : '$'}
+                            {stock.price.toFixed(2)}
+                          </span>
+                        ) : (
+                          <span className="text-sm font-mono text-[#5A6478] border-b border-dashed border-slate-400 pb-[1px]">
+                            Pending
+                          </span>
+                        )}
                       </div>
 
-                      <div className="text-right">
-                        <span className="text-[10px] font-mono text-[#5A6478] block uppercase">
-                          Day Change
-                        </span>
-                        <span
-                          className={`text-sm font-mono font-bold ${
-                            isPositive ? 'text-[#00C48C]' : 'text-[#FF4D4F]'
-                          }`}
-                        >
-                          {isPositive ? '+' : ''}
-                          {stock.change.toFixed(2)} ({isPositive ? '+' : ''}
-                          {stock.changePercent.toFixed(2)}%)
-                        </span>
-                      </div>
+                      {stock.hasPriceData && (
+                        <div className="text-right">
+                          <span className="text-[10px] font-mono text-[#5A6478] block uppercase">
+                            Day Change
+                          </span>
+                          <span
+                            className={`text-sm font-mono font-bold ${
+                              isPositive ? 'text-[#00C48C]' : 'text-[#FF4D4F]'
+                            }`}
+                          >
+                            {isPositive ? '+' : ''}
+                            {stock.change.toFixed(2)} ({isPositive ? '+' : ''}
+                            {stock.changePercent.toFixed(2)}%)
+                          </span>
+                        </div>
+                      )}
                     </div>
 
                     {/* Sparkline */}
-                    <div className="h-12 w-full pt-2">
-                      <svg
-                        className="w-full h-full overflow-visible"
-                        viewBox="0 0 100 30"
-                        preserveAspectRatio="none"
-                      >
-                        <path
-                          d={`M 0,${
-                            30 -
-                            ((stock.sparkline[0] - Math.min(...stock.sparkline)) /
-                              (Math.max(...stock.sparkline) - Math.min(...stock.sparkline) || 1)) *
-                              25
-                          } ${stock.sparkline
-                            .map((p, idx) => {
-                              const x = (idx / (stock.sparkline.length - 1)) * 100;
-                              const min = Math.min(...stock.sparkline);
-                              const max = Math.max(...stock.sparkline);
-                              const y = 30 - ((p - min) / (max - min || 1)) * 25;
-                              return `L ${x},${y}`;
-                            })
-                            .join(' ')}`}
-                          fill="none"
-                          stroke={isPositive ? '#00C48C' : '#FF4D4F'}
-                          strokeWidth="2"
-                        />
-                      </svg>
-                    </div>
+                    {stock.hasPriceData && stock.sparkline.length > 1 && (
+                      <div className="h-12 w-full pt-2">
+                        <svg
+                          className="w-full h-full overflow-visible"
+                          viewBox="0 0 100 30"
+                          preserveAspectRatio="none"
+                        >
+                          <path
+                            d={`M 0,${
+                              30 -
+                              ((stock.sparkline[0] - Math.min(...stock.sparkline)) /
+                                (Math.max(...stock.sparkline) - Math.min(...stock.sparkline) || 1)) *
+                                25
+                            } ${stock.sparkline
+                              .map((p, idx) => {
+                                const x = (idx / (stock.sparkline.length - 1)) * 100;
+                                const min = Math.min(...stock.sparkline);
+                                const max = Math.max(...stock.sparkline);
+                                const y = 30 - ((p - min) / (max - min || 1)) * 25;
+                                return `L ${x},${y}`;
+                              })
+                              .join(' ')}`}
+                            fill="none"
+                            stroke={isPositive ? '#00C48C' : '#FF4D4F'}
+                            strokeWidth="2"
+                          />
+                        </svg>
+                      </div>
+                    )}
                   </div>
 
                   {/* Card Footer Action */}
