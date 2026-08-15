@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Article, User } from '../types';
-import { 
-  ArrowLeft, 
-  Clock, 
-  ShieldCheck, 
-  Share2, 
-  Bookmark, 
-  Check, 
-  Tag, 
-  TrendingUp, 
+import { apiClient } from '../services/apiClient';
+import {
+  ArrowLeft,
+  Clock,
+  ShieldCheck,
+  Share2,
+  Bookmark,
+  Check,
+  Tag,
+  TrendingUp,
   ExternalLink,
   ChevronRight,
-  BookOpen
+  BookOpen,
+  Sparkles,
+  Pencil
 } from 'lucide-react';
 
 interface ArticleDetailViewProps {
@@ -39,12 +42,35 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
 }) => {
   const [copied, setCopied] = useState(false);
 
+  // Admin-only inline editorial note authoring -- same rationale as
+  // ArticleModal: no dedicated "manage insights" admin screen exists yet.
+  const [editingNote, setEditingNote] = useState(false);
+  const [noteDraft, setNoteDraft] = useState(article.editorialNote || '');
+  const [noteSaving, setNoteSaving] = useState(false);
+  const [liveNote, setLiveNote] = useState<string | undefined>(article.editorialNote);
+
   // Scroll to top when opening an article
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    setLiveNote(article.editorialNote);
+    setEditingNote(false);
+    setNoteDraft(article.editorialNote || '');
   }, [article.id]);
 
   const isSaved = savedArticleIds.includes(article.id);
+
+  const handleSaveNote = async () => {
+    setNoteSaving(true);
+    try {
+      const updated = await apiClient.admin.insights.setEditorialNote(article.id, noteDraft.trim());
+      setLiveNote(updated.editorialNote);
+      setEditingNote(false);
+    } catch (err) {
+      console.error('Failed to save editorial note:', err);
+    } finally {
+      setNoteSaving(false);
+    }
+  };
 
   const handleShare = () => {
     navigator.clipboard?.writeText(window.location.href);
@@ -155,6 +181,59 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
             </div>
           </div>
         </div>
+
+        {/* MarketMaven Take — original commentary layered on top of the
+            aggregated story, visually distinct from the (unmodified)
+            summary/excerpt below it. Admin-only inline authoring since
+            there's no dedicated insights-management screen yet. */}
+        {(liveNote || currentUser?.is_admin) && (
+          <div className="bg-[#0A0F1A] rounded-2xl p-6 border border-[#22C55E]/30">
+            <div className="flex items-center justify-between mb-3">
+              <span className="inline-flex items-center gap-1.5 text-[#22C55E] text-xs font-bold uppercase tracking-wider">
+                <Sparkles className="w-4 h-4" />
+                MarketMaven Take
+              </span>
+              {currentUser?.is_admin && !editingNote && (
+                <button
+                  onClick={() => setEditingNote(true)}
+                  className="text-slate-400 hover:text-white transition-colors cursor-pointer"
+                  title={liveNote ? 'Edit MarketMaven Take' : 'Add a MarketMaven Take'}
+                >
+                  <Pencil className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+
+            {editingNote ? (
+              <div className="space-y-2">
+                <textarea
+                  value={noteDraft}
+                  onChange={(e) => setNoteDraft(e.target.value)}
+                  rows={4}
+                  placeholder="Original MarketMaven analysis on this story..."
+                  className="w-full bg-[#141A29] border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#22C55E]"
+                />
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleSaveNote}
+                    disabled={noteSaving}
+                    className="px-3 py-1.5 bg-[#22C55E] hover:bg-[#16A34A] text-white text-xs font-bold rounded-lg cursor-pointer disabled:opacity-50"
+                  >
+                    {noteSaving ? 'Saving...' : 'Save'}
+                  </button>
+                  <button
+                    onClick={() => { setEditingNote(false); setNoteDraft(liveNote || ''); }}
+                    className="px-3 py-1.5 text-slate-400 hover:text-white text-xs font-semibold cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ) : (
+              liveNote && <p className="text-sm sm:text-base text-slate-200 leading-relaxed">{liveNote}</p>
+            )}
+          </div>
+        )}
 
         {/* Featured Image */}
         <div className="aspect-[16/9] overflow-hidden rounded-2xl bg-slate-200 border border-[#E3E8F1] shadow-sm relative">

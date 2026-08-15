@@ -1,13 +1,36 @@
 import React, { useState } from 'react';
-import { DollarSign, ArrowLeftRight, TrendingUp, AlertCircle, Info, RefreshCw } from 'lucide-react';
+import { DollarSign, ArrowLeftRight, TrendingUp, AlertCircle, Info, RefreshCw, Newspaper, Bookmark, Check, Sparkles } from 'lucide-react';
+import { Article, User } from '../types';
 
 interface TemplateBPageProps {
   title: string;
   subtitle?: string;
   type?: 'currencies' | 'rates';
+  // Real forex news, rendered below the rates widget — rates-then-news is
+  // the deliberate order per spec, not the other way around. Optional so
+  // TemplateBPage still works standalone if a future 'rates' page reuses
+  // it without a news feed.
+  newsArticles?: Article[];
+  newsLoading?: boolean;
+  currentUser?: User | null;
+  savedArticleIds?: string[];
+  onToggleSaveArticle?: (articleId: string) => void;
+  onArticleClick?: (article: Article) => void;
+  onOpenAuthPrompt?: () => void;
 }
 
-export const TemplateBPage: React.FC<TemplateBPageProps> = ({ title, subtitle, type = 'currencies' }) => {
+export const TemplateBPage: React.FC<TemplateBPageProps> = ({
+  title,
+  subtitle,
+  type = 'currencies',
+  newsArticles,
+  newsLoading = false,
+  currentUser,
+  savedArticleIds = [],
+  onToggleSaveArticle,
+  onArticleClick,
+  onOpenAuthPrompt,
+}) => {
   const [fromAmount, setFromAmount] = useState<number>(1000);
   const [fromCurrency, setFromCurrency] = useState<string>('USD');
   const [toCurrency, setToCurrency] = useState<string>('NGN');
@@ -189,6 +212,82 @@ export const TemplateBPage: React.FC<TemplateBPageProps> = ({ title, subtitle, t
           </table>
         </div>
       </div>
+
+      {/* Real forex news, deliberately below the rates widget above --
+          rates-then-news per spec, not the other way around. */}
+      {newsArticles !== undefined && (
+        <div className="space-y-4">
+          <div className="flex items-center gap-2 text-[#14181F] font-serif font-bold text-lg border-b border-[#E3E8F1] pb-3">
+            <Newspaper className="w-5 h-5 text-[#22C55E]" />
+            <span>Currency & Forex News</span>
+          </div>
+
+          {newsLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {[1, 2, 3, 4].map((n) => (
+                <div key={n} className="bg-white border border-[#E3E8F1] rounded-xl p-4 animate-pulse space-y-2">
+                  <div className="h-4 bg-slate-200 rounded w-3/4" />
+                  <div className="h-3 bg-slate-200 rounded w-full" />
+                </div>
+              ))}
+            </div>
+          ) : newsArticles.length === 0 ? (
+            <div className="bg-white border border-[#E3E8F1] rounded-xl p-8 text-center text-[#5A6478] text-sm">
+              No forex news in the wire right now — check back soon.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {newsArticles.map((article) => {
+                const isSaved = savedArticleIds.includes(article.id);
+                return (
+                  <article
+                    key={article.id}
+                    onClick={() => onArticleClick?.(article)}
+                    className="bg-white border border-[#E3E8F1] hover:border-[#22C55E] rounded-xl p-4 shadow-xs hover:shadow-md transition-all cursor-pointer group"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        {article.editorialNote && (
+                          <span className="inline-flex items-center gap-1 text-[#22C55E] text-[10px] font-bold uppercase tracking-wider mb-1.5">
+                            <Sparkles className="w-3 h-3" /> MarketMaven Take
+                          </span>
+                        )}
+                        <h3 className="font-serif font-bold text-sm text-[#14181F] group-hover:text-[#22C55E] transition-colors leading-snug line-clamp-2">
+                          {article.title}
+                        </h3>
+                        <p className="text-xs text-[#5A6478] mt-1.5 line-clamp-2 leading-relaxed">
+                          {article.excerpt}
+                        </p>
+                        <div className="flex items-center gap-2 mt-2 text-[10px] font-mono text-[#5A6478]">
+                          <span className="font-semibold text-[#14181F]">{article.source}</span>
+                          <span>•</span>
+                          <span>{article.relativeTime}</span>
+                        </div>
+                      </div>
+                      {onToggleSaveArticle && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (!currentUser) onOpenAuthPrompt?.();
+                            else onToggleSaveArticle(article.id);
+                          }}
+                          className={`p-1.5 rounded-lg shrink-0 transition-colors cursor-pointer ${
+                            isSaved ? 'bg-[#22C55E] text-white' : 'text-[#5A6478] hover:bg-[#FAFBFC]'
+                          }`}
+                          title={isSaved ? 'Remove from saved' : 'Save article'}
+                        >
+                          {isSaved ? <Check className="w-3.5 h-3.5" /> : <Bookmark className="w-3.5 h-3.5" />}
+                        </button>
+                      )}
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

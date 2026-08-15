@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Article, User } from '../types';
-import { Bookmark, Clock, Eye, Newspaper, ArrowUpRight, Check } from 'lucide-react';
+import { Bookmark, Clock, Eye, Newspaper, ArrowUpRight, Check, Sparkles } from 'lucide-react';
 
 interface TemplateAPageProps {
   title: string;
   subtitle?: string;
   articles: Article[];
+  loading?: boolean;
   currentUser: User | null;
   savedArticleIds: string[];
   onToggleSaveArticle: (articleId: string) => void;
@@ -17,6 +18,7 @@ export const TemplateAPage: React.FC<TemplateAPageProps> = ({
   title,
   subtitle,
   articles,
+  loading = false,
   currentUser,
   savedArticleIds,
   onToggleSaveArticle,
@@ -60,11 +62,28 @@ export const TemplateAPage: React.FC<TemplateAPageProps> = ({
       </div>
 
       {/* Article Grid */}
-      {filtered.length === 0 ? (
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1, 2, 3, 4, 5, 6].map((n) => (
+            <div key={n} className="bg-white border border-[#E3E8F1] rounded-xl overflow-hidden animate-pulse">
+              <div className="h-48 bg-slate-200" />
+              <div className="p-4 space-y-2">
+                <div className="h-4 bg-slate-200 rounded w-3/4" />
+                <div className="h-3 bg-slate-200 rounded w-full" />
+                <div className="h-3 bg-slate-200 rounded w-2/3" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : filtered.length === 0 ? (
         <div className="bg-white border border-[#E3E8F1] rounded-xl p-12 text-center my-8">
           <Newspaper className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-          <h3 className="text-base font-bold text-[#14181F]">No articles matching "{searchTerm}"</h3>
-          <p className="text-xs text-[#5A6478] mt-1">Try resetting your search query to view all dispatches in this category.</p>
+          <h3 className="text-base font-bold text-[#14181F]">
+            {searchTerm ? `No articles matching "${searchTerm}"` : 'No articles in this section yet'}
+          </h3>
+          <p className="text-xs text-[#5A6478] mt-1">
+            {searchTerm ? 'Try resetting your search query to view all dispatches in this category.' : 'Check back soon — new stories are pulled in regularly.'}
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -86,8 +105,16 @@ export const TemplateAPage: React.FC<TemplateAPageProps> = ({
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80" />
                   
                   {/* Category Tag */}
-                  <div className="absolute top-3 left-3 bg-[#0A0F1A]/80 backdrop-blur-xs text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md">
-                    {article.category}
+                  <div className="absolute top-3 left-3 flex flex-col items-start gap-1.5">
+                    <span className="bg-[#0A0F1A]/80 backdrop-blur-xs text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md">
+                      {article.category}
+                    </span>
+                    {article.editorialNote && (
+                      <span className="inline-flex items-center gap-1 bg-[#22C55E]/90 backdrop-blur-xs text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md">
+                        <Sparkles className="w-3 h-3" />
+                        MarketMaven Take
+                      </span>
+                    )}
                   </div>
 
                   {/* Bookmark Button */}

@@ -1,13 +1,26 @@
 // SECURITY NOTE: JWT token is stored in localStorage under 'marketmaven_token'.
 // In a production security pass, this should be upgraded to httpOnly cookies to mitigate XSS risks.
 
-import { Article, TopSource, StockData, User, ReportItem, EditorsPickItem } from '../types';
+import { Article, TopSource, StockData, User, ReportItem, EditorsPickItem, EconomicIndicator } from '../types';
 import { INITIAL_ARTICLES, INITIAL_TOP_SOURCES } from '../data/mockArticles';
 import { MOCK_STOCKS } from '../data/mockStocks';
 import {
-  InsightApiItem, ReportApiItem, EditorsPickApiItem, SourceRankApiItem, UserApiItem,
+  InsightApiItem, ReportApiItem, EditorsPickApiItem, SourceRankApiItem, UserApiItem, EconomicIndicatorApiItem,
   adaptInsight, adaptInsightList, adaptReport, adaptReportList, adaptEditorsPickList, adaptTopSourceList, adaptUser,
+  adaptEconomicIndicatorList,
 } from './adapters';
+
+// Real shape of GET /issuers/{id}/prices — one row per trading day.
+export interface PriceApiItem {
+  trade_date: string;
+  open: number | null;
+  high: number | null;
+  low: number | null;
+  close: number;
+  change_pct: number | null;
+  volume: number | null;
+  currency: string;
+}
 
 export const TOKEN_STORAGE_KEY = 'marketmaven_token';
 
@@ -293,10 +306,11 @@ export const apiClient = {
   },
 
   reports: {
-    get: async (params: { vertical?: string; limit?: number } = {}): Promise<ReportItem[]> => {
+    get: async (params: { vertical?: string; limit?: number; newsletterOnly?: boolean } = {}): Promise<ReportItem[]> => {
       const urlParams = new URLSearchParams();
       if (params.vertical) urlParams.set('vertical', params.vertical);
       if (params.limit) urlParams.set('limit', params.limit.toString());
+      if (params.newsletterOnly) urlParams.set('newsletter_only', 'true');
       const query = urlParams.toString();
       const data = await request<ReportApiItem[]>(`/reports${query ? `?${query}` : ''}`, { method: 'GET' });
       return adaptReportList(data);
@@ -359,6 +373,27 @@ export const apiClient = {
         });
       },
     },
+
+    insights: {
+      // Partial update -- omit featured/featured_order to touch only the
+      // note (see the backend's AdminFeatureIn/admin_set_featured, which
+      // this same endpoint also backs for pinning/featuring).
+      setEditorialNote: async (id: string, editorialNote: string): Promise<Article> => {
+        const data = await request<InsightApiItem>(`/admin/insights/${encodeURIComponent(id)}/feature`, {
+          method: 'PATCH',
+          body: JSON.stringify({ editorial_note: editorialNote }),
+        });
+        return adaptInsight(data);
+      },
+
+      setFeatured: async (id: string, featured: boolean, featuredOrder?: number): Promise<Article> => {
+        const data = await request<InsightApiItem>(`/admin/insights/${encodeURIComponent(id)}/feature`, {
+          method: 'PATCH',
+          body: JSON.stringify({ featured, featured_order: featuredOrder }),
+        });
+        return adaptInsight(data);
+      },
+    },
   },
 
   // 6. NEWSLETTER
@@ -387,12 +422,30 @@ export const apiClient = {
       return request<{ id: number; ticker: string; name: string; exchange: string; sector: string | null }[]>('/issuers', { method: 'GET' });
     },
 
-    issuerPrices: async (id: string): Promise<StockData> => {
-      return request<StockData>(`/issuers/${encodeURIComponent(id)}/prices`, { method: 'GET' });
+    // Was typed Promise<StockData> (the mock-shaped ticker/price/sparkline/
+    // ohlc object) but the real endpoint returns PriceOut[] -- one row per
+    // trading day (trade_date/open/high/low/close/volume/currency), not a
+    // single quote object. Left unused until Advanced Charts needed real
+    // data; fixing the type here rather than papering over the mismatch at
+    // the call site.
+    issuerPrices: async (id: string): Promise<PriceApiItem[]> => {
+      return request<PriceApiItem[]>(`/issuers/${encodeURIComponent(id)}/prices`, { method: 'GET' });
     },
 
     index: async (code: string): Promise<any> => {
       return request<any>(`/indices/${encodeURIComponent(code)}`, { method: 'GET' });
+    },
+  },
+
+  // 7. ECONOMIC INDICATORS (US-only -- see backend's EconomicIndicator model docstring)
+  economicIndicators: {
+    get: async (params: { seriesCode?: string; limit?: number } = {}): Promise<EconomicIndicator[]> => {
+      const urlParams = new URLSearchParams();
+      if (params.seriesCode) urlParams.set('series_code', params.seriesCode);
+      if (params.limit) urlParams.set('limit', params.limit.toString());
+      const query = urlParams.toString();
+      const data = await request<EconomicIndicatorApiItem[]>(`/economic-indicators${query ? `?${query}` : ''}`, { method: 'GET' });
+      return adaptEconomicIndicatorList(data);
     },
   },
 };

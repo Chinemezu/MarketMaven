@@ -7,7 +7,7 @@
 // derived from the real email) rather than the richer, partly-fabricated
 // shape the UI components were originally built against.
 
-import { Article, ReportItem, TopSource, User, EditorsPickItem } from '../types';
+import { Article, ReportItem, TopSource, User, EditorsPickItem, EconomicIndicator } from '../types';
 
 export interface InsightApiItem {
   id: number;
@@ -18,9 +18,19 @@ export interface InsightApiItem {
   published_date: string | null;
   summary: string | null;
   image_url?: string | null;
+  editorial_note?: string | null;
   relevance_score?: number;
   featured?: boolean;
   saved_at?: string;
+}
+
+export interface EconomicIndicatorApiItem {
+  series_code: string;
+  name: string;
+  value: number;
+  date: string;
+  country: string;
+  unit: string;
 }
 
 export interface ReportApiItem {
@@ -131,6 +141,7 @@ export function adaptInsight(raw: InsightApiItem, featuredOrder?: number): Artic
     // longer body we don't actually have.
     content: summary,
     url: raw.url,
+    editorialNote: raw.editorial_note || undefined,
     category: prettyVertical(raw.vertical),
     keywords: [],
     source: raw.source,
@@ -218,4 +229,22 @@ export function adaptUser(raw: UserApiItem): User {
     createdAt: '', // not exposed by the backend and not rendered anywhere today
     is_admin: raw.is_admin,
   };
+}
+
+// Shape already matches 1:1 -- kept as an explicit adapter (rather than
+// passing the raw API type straight through) so a future backend field
+// rename doesn't silently propagate to every consumer.
+export function adaptEconomicIndicator(raw: EconomicIndicatorApiItem): EconomicIndicator {
+  return {
+    series_code: raw.series_code,
+    name: raw.name,
+    value: raw.value,
+    date: raw.date,
+    country: raw.country,
+    unit: raw.unit,
+  };
+}
+
+export function adaptEconomicIndicatorList(raw: EconomicIndicatorApiItem[]): EconomicIndicator[] {
+  return raw.map(adaptEconomicIndicator);
 }

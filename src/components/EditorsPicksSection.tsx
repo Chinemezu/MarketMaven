@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Article, TopSource, EditorsPickItem } from '../types';
 import { apiClient } from '../services/apiClient';
 import { submitNewsletterSignup } from '../services/api';
+import { openEditorsPickItem } from '../services/editorsPicks';
 import { CheckCircle2, AlertCircle, Mail, ArrowRight, ShieldCheck, Sparkles, FileText } from 'lucide-react';
 
 interface EditorsPicksSectionProps {
@@ -70,27 +71,11 @@ export const EditorsPicksSection: React.FC<EditorsPicksSectionProps> = ({
   };
 
   const handleItemClick = (item: EditorsPickItem) => {
-    if (item.content_type === 'report') {
-      onReportClick(item.url_or_slug);
-    } else {
-      // Find matching insight in mostRelevant or build synthetic Article
-      const synthArticle: Article = {
-        id: item.id,
-        title: item.title,
-        excerpt: item.summary,
-        content: item.summary + '\n\nFull analysis available on primary source network.',
-        category: (item.vertical as any) || 'Markets',
-        keywords: [item.vertical, 'MarketMaven'],
-        source: item.source_or_author,
-        publishedAt: item.published_date,
-        relativeTime: 'Recent',
-        readTime: item.readTime || '4 min read',
-        imageUrl: item.imageUrl || item.cover_image_url || 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&q=80&w=1200',
-        featured: true,
-        relevanceScore: 95,
-      };
-      onArticleClick(synthArticle);
-    }
+    // Fetches the real article for insight-type picks (GET /insights/{id})
+    // rather than constructing one with fabricated fields -- this used to
+    // build a synthetic Article with a placeholder stock-photo image, an
+    // invented "4 min read", and made-up body text.
+    openEditorsPickItem(item, onArticleClick, onReportClick);
   };
 
   return (

@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { ReportItem } from '../types';
 import { apiClient } from '../services/apiClient';
-import { FileText, Clock, User, ArrowRight, ShieldCheck, Filter } from 'lucide-react';
+import { FileText, Clock, User, ArrowRight, ShieldCheck, Filter, Mail } from 'lucide-react';
 
 interface ReportsListViewProps {
   onSelectReport: (slug: string) => void;
   initialVertical?: string;
+  // Newsletters reuses this same view/card component per spec, rather than
+  // a separate implementation -- GET /reports?newsletter_only=true (the
+  // existing Report.is_newsletter flag), no new backend work.
+  newsletterOnly?: boolean;
 }
 
 export const ReportsListView: React.FC<ReportsListViewProps> = ({
   onSelectReport,
   initialVertical = 'All',
+  newsletterOnly = false,
 }) => {
   const [reports, setReports] = useState<ReportItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -22,7 +27,7 @@ export const ReportsListView: React.FC<ReportsListViewProps> = ({
     let isMounted = true;
     setLoading(true);
 
-    apiClient.reports.get({ vertical: activeVertical === 'All' ? undefined : activeVertical })
+    apiClient.reports.get({ vertical: activeVertical === 'All' ? undefined : activeVertical, newsletterOnly })
       .then((data) => {
         if (isMounted) setReports(data);
       })
@@ -34,30 +39,36 @@ export const ReportsListView: React.FC<ReportsListViewProps> = ({
       });
 
     return () => { isMounted = false; };
-  }, [activeVertical]);
+  }, [activeVertical, newsletterOnly]);
 
   return (
     <div className="min-h-screen bg-[#FAFBFC] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        
+
         {/* Banner Header */}
         <div className="bg-[#0A0F1A] text-white rounded-2xl p-8 sm:p-12 mb-10 shadow-sm relative overflow-hidden">
           <div className="absolute top-0 right-0 w-96 h-96 bg-[#22C55E]/15 rounded-full blur-3xl pointer-events-none"></div>
-          
+
           <div className="max-w-2xl relative z-10">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#22C55E] text-white text-xs font-bold rounded-full uppercase tracking-wider mb-4">
-              <FileText className="w-3.5 h-3.5" /> First-Party Intelligence
+              {newsletterOnly ? <Mail className="w-3.5 h-3.5" /> : <FileText className="w-3.5 h-3.5" />}
+              {newsletterOnly ? 'Newsletter Archive' : 'First-Party Intelligence'}
             </span>
             <h1 className="font-serif text-3xl sm:text-5xl font-bold text-white mb-4 leading-tight">
-              MarketMaven Featured Reports
+              {newsletterOnly ? 'MarketMaven Newsletters' : 'MarketMaven Featured Reports'}
             </h1>
             <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
-              In-depth empirical research, sovereign liquidity assessments, and sector deep-dives authored by MarketMaven’s financial desk analysts.
+              {newsletterOnly
+                ? 'Every dispatch sent to the MarketMaven Morning Wire subscriber list, archived here for anyone to read.'
+                : "In-depth empirical research, sovereign liquidity assessments, and sector deep-dives authored by MarketMaven's financial desk analysts."}
             </p>
           </div>
         </div>
 
-        {/* Filter Bar */}
+        {/* Filter Bar — not shown for the newsletter archive; newsletters
+            aren't meant to be browsed by research vertical the way
+            Featured Reports are. */}
+        {!newsletterOnly && (
         <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-8 no-scrollbar">
           <span className="text-xs font-bold text-[#5A6478] uppercase mr-2 flex items-center gap-1 shrink-0">
             <Filter className="w-3.5 h-3.5" /> Vertical:
@@ -76,6 +87,7 @@ export const ReportsListView: React.FC<ReportsListViewProps> = ({
             </button>
           ))}
         </div>
+        )}
 
         {/* Grid List of Reports */}
         {loading ? (
@@ -103,11 +115,21 @@ export const ReportsListView: React.FC<ReportsListViewProps> = ({
               >
                 <div>
                   <div className="aspect-[16/10] overflow-hidden bg-slate-100 relative">
-                    <img
-                      src={report.cover_image_url || 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&q=80&w=1200'}
-                      alt={report.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
+                    {report.cover_image_url ? (
+                      <img
+                        src={report.cover_image_url}
+                        alt={report.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : (
+                      // No stock photo standing in for a real cover -- most
+                      // reports don't have one set, and a generic Unsplash
+                      // image would misleadingly suggest it was chosen for
+                      // this specific story.
+                      <div className="w-full h-full bg-gradient-to-br from-[#0A0F1A] to-[#141A29] flex items-center justify-center">
+                        <FileText className="w-10 h-10 text-white/20" />
+                      </div>
+                    )}
                     <span className="absolute top-3 left-3 px-2.5 py-1 bg-[#22C55E] text-white text-[10px] font-bold uppercase rounded-full shadow">
                       {report.vertical}
                     </span>

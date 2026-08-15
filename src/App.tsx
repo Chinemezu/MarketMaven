@@ -3,6 +3,7 @@ import { Article, NavItem, StockData, TopSource, User } from './types';
 import { fetchInsights, fetchTopSources } from './services/api';
 import { apiClient, getStoredToken, clearStoredToken, onUnauthorized } from './services/apiClient';
 import { resolveRoute } from './services/router';
+import { sectionFeedParams } from './data/sectionFeeds';
 import { MOCK_STOCKS } from './data/mockStocks';
 
 // Header and Shell
@@ -15,6 +16,7 @@ import { Footer } from './components/Footer';
 // Homepage Subsections
 import { HeroSection } from './components/HeroSection';
 import { SpotlightSection } from './components/SpotlightSection';
+import { SpotlightPickSection } from './components/SpotlightPickSection';
 import { MostRelevantSection } from './components/MostRelevantSection';
 import { EditorsPicksSection } from './components/EditorsPicksSection';
 import { MoreTopStoriesSection } from './components/MoreTopStoriesSection';
@@ -25,6 +27,7 @@ import { TemplateBPage } from './components/TemplateBPage';
 import { TemplateCPage } from './components/TemplateCPage';
 import { ScreenerView } from './components/ScreenerView';
 import { CurrencyConverterView } from './components/CurrencyConverterView';
+import { EconomicIndicatorsView } from './components/EconomicIndicatorsView';
 import { AdvancedChartsView } from './components/AdvancedChartsView';
 import { EducationView } from './components/EducationView';
 import { PortfolioView } from './components/PortfolioView';
@@ -49,6 +52,14 @@ export default function App() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [topSources, setTopSources] = useState<TopSource[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Real, correctly-filtered data for a Market News section (Latest/Stock
+  // Market/Currencies/Crypto) — see data/sectionFeeds.ts. Previously these
+  // sections client-side-filtered the single globally-loaded `articles`
+  // list by fuzzy-matching the nav label against category strings, which
+  // didn't actually filter by vertical at all.
+  const [sectionArticles, setSectionArticles] = useState<Article[]>([]);
+  const [sectionLoading, setSectionLoading] = useState(false);
 
   // Active navigation location state
   const [currentNavItem, setCurrentNavItem] = useState<NavItem>({
@@ -178,6 +189,24 @@ export default function App() {
   useEffect(() => {
     loadData();
   }, []);
+
+  // Fetch the real, correctly-filtered feed whenever a Market News section
+  // is the active view — see data/sectionFeeds.ts for the vertical/sort
+  // mapping per section.
+  useEffect(() => {
+    const params = sectionFeedParams(currentNavItem.id);
+    if (!params) return;
+    let isMounted = true;
+    setSectionLoading(true);
+    apiClient.insights.get(params)
+      .then((data) => { if (isMounted) setSectionArticles(data); })
+      .catch((err) => {
+        console.warn('Failed to load section feed:', err);
+        if (isMounted) setSectionArticles([]);
+      })
+      .finally(() => { if (isMounted) setSectionLoading(false); });
+    return () => { isMounted = false; };
+  }, [currentNavItem.id]);
 
   // Handlers for navigation & state
   //
@@ -401,6 +430,18 @@ export default function App() {
               featuredSecondary={heroSecondary}
               onArticleClick={handleOpenArticle}
             />
+            <SpotlightPickSection
+              onArticleClick={handleOpenArticle}
+              onReportClick={(slug) => {
+                setSelectedReportSlug(slug);
+                handleNavigate({
+                  id: `report-${slug}`,
+                  label: 'MarketMaven Special Report',
+                  path: `/reports/${slug}`,
+                  template: 'report-detail',
+                });
+              }}
+            />
             <SpotlightSection
               mainStory={spotlightMain}
               subStories={spotlightSub}
@@ -476,18 +517,21 @@ export default function App() {
         );
 
       case 'A':
-      case 'template-a':
-        const categoryArticles = articles.filter(
-          (a) =>
-            a.category.toLowerCase().includes(currentNavItem.label.toLowerCase()) ||
-            currentNavItem.label.toLowerCase().includes(a.category.toLowerCase()) ||
-            a.keywords.some((k) => k.toLowerCase().includes(currentNavItem.label.toLowerCase()))
-        );
+      case 'template-a': {
+        // Real vertical-filtered feed for any section with a mapping in
+        // sectionFeedParams (Latest/Stock Market/Crypto today) — falls
+        // back to a plain slice of the global feed only for a
+        // hypothetical 'A'-templated nav item with no section mapping,
+        // which doesn't currently exist but shouldn't render blank if
+        // one's added later without also adding a feed mapping.
+        const hasSectionFeed = !!sectionFeedParams(currentNavItem.id);
+        const feedArticles = hasSectionFeed ? sectionArticles : articles.slice(0, 9);
         return (
           <TemplateAPage
             title={currentNavItem.label}
             subtitle={currentNavItem.description}
-            articles={categoryArticles.length > 0 ? categoryArticles : articles.slice(0, 9)}
+            articles={feedArticles}
+            loading={hasSectionFeed && sectionLoading}
             currentUser={currentUser}
             savedArticleIds={savedArticleIds}
             onToggleSaveArticle={handleToggleSaveArticle}
@@ -495,16 +539,30 @@ export default function App() {
             onOpenAuthPrompt={() => handleOpenAuthPrompt('login', 'Sign in to save stories')}
           />
         );
+      }
 
       case 'B':
-      case 'template-b':
+      case 'template-b': {
+        const isRates = currentNavItem.id.includes('rates');
         return (
           <TemplateBPage
             title={currentNavItem.label}
             subtitle={currentNavItem.description}
-            type={currentNavItem.id.includes('rates') ? 'rates' : 'currencies'}
+            type={isRates ? 'rates' : 'currencies'}
+            // Real forex news below the rates widget -- only for the
+            // actual Currencies section (sectionFeedParams has no entry
+            // for a hypothetical 'rates' page, so newsArticles stays
+            // undefined there and the news block doesn't render at all).
+            newsArticles={sectionFeedParams(currentNavItem.id) ? sectionArticles : undefined}
+            newsLoading={sectionLoading}
+            currentUser={currentUser}
+            savedArticleIds={savedArticleIds}
+            onToggleSaveArticle={handleToggleSaveArticle}
+            onArticleClick={handleOpenArticle}
+            onOpenAuthPrompt={() => handleOpenAuthPrompt('login', 'Sign in to save stories')}
           />
         );
+      }
 
       case 'C':
       case 'template-c':
@@ -553,6 +611,9 @@ export default function App() {
       case 'converter':
         return <CurrencyConverterView />;
 
+      case 'economic-indicators':
+        return <EconomicIndicatorsView />;
+
       case 'advanced-charts':
         return <AdvancedChartsView initialStock={selectedStockForChart} />;
 
@@ -572,8 +633,10 @@ export default function App() {
         );
 
       case 'reports':
+      case 'newsletters':
         return (
           <ReportsListView
+            newsletterOnly={currentNavItem.template === 'newsletters'}
             onSelectReport={(slug) => {
               setSelectedReportSlug(slug);
               handleNavigate({

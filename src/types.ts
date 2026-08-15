@@ -10,6 +10,7 @@ export interface Article {
   // from that, not a closed set.
   category: string;
   url?: string; // link to the original source — the real article body lives there, not in `content`
+  editorialNote?: string; // original MarketMaven commentary layered on top of the aggregated story — not a substitute for it
   keywords: string[];
   source: string; // e.g., "Nairametrics", "Reuters Markets", "Bloomberg News", "Financial Times", "TechCabal", "BusinessDay"
   sourceLogo?: string;
@@ -85,7 +86,19 @@ export interface TopSource {
   avatarBg?: string;
 }
 
-export type PageTemplateType = 'home' | 'template-a' | 'template-b' | 'template-c' | 'A' | 'B' | 'C' | 'screener' | 'converter' | 'chart' | 'advanced-charts' | 'education' | 'portfolio' | 'saved' | 'login' | 'register' | 'forgot-password' | 'reset-password' | 'verify-email' | 'reports' | 'report-detail' | 'article-detail' | 'article_detail' | 'admin-reports' | 'about' | 'terms' | 'privacy' | 'disclaimer' | 'cookies' | 'contact';
+export type PageTemplateType = 'home' | 'template-a' | 'template-b' | 'template-c' | 'A' | 'B' | 'C' | 'screener' | 'converter' | 'chart' | 'advanced-charts' | 'education' | 'portfolio' | 'saved' | 'login' | 'register' | 'forgot-password' | 'reset-password' | 'verify-email' | 'reports' | 'report-detail' | 'article-detail' | 'article_detail' | 'admin-reports' | 'about' | 'terms' | 'privacy' | 'disclaimer' | 'cookies' | 'contact' | 'economic-indicators' | 'newsletters' | 'crypto-news';
+
+// Real values from FRED (US-only — see backend's EconomicIndicator model
+// docstring). country is always "US" today, kept as a real field rather
+// than assumed since a non-US source could be added later.
+export interface EconomicIndicator {
+  series_code: string;
+  name: string;
+  value: number;
+  date: string;
+  country: string;
+  unit: string;
+}
 
 export interface IssuerItem {
   issuer_id: string;
